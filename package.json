@@ -1,0 +1,16 @@
+{
+    "name": "gmail-salesforce-extension",
+    "description": "Google Chrome extension for a custom integration of missing functionality from Lightning for Gmail.",
+    "dependencies": {
+        "jquery": "3.2.1",
+        "lodash": "4.17.4",
+        "moment": "2.18.1",
+        "select2": "4.0.3",
+        "mutation-summary": "0.1.1"
+    },
+    "devDependencies": {
+        "typescript": "2.3.2",
+        "@types/jquery": "2.0.43",
+        "@types/moment": "2.13.0"
+    }
+}
