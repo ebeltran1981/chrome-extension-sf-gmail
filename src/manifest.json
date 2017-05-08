@@ -1,0 +1,18 @@
+{
+    "manifest_version": 2,
+    "name": "AtlanticBT Gmail and Salesforce Extension",
+    "version": "0.0.1",
+
+    "description": "Extension for AtlanticBT. This extension implements missing features needed by ABT from the 'Lightning for Gmail' plugin from Salesforce.",
+
+    "browser_action": {
+        "default_icon": "images/favicon.png",
+        "default_popup": "popup.html"
+    },
+
+    "author": "Edwin Beltran",
+    "background": {
+        "persitent": false
+    },
+    "offline_enabled": false
+}

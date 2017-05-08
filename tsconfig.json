@@ -10,9 +10,7 @@
         "module": "none",
         "typeRoots": [
             "node_modules/@types"
-        ],
-        "sourceRoot": "src",
-        "outDir": "dist"
+        ]
     },
     "exclude": [
         "node_modules"
