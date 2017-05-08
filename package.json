@@ -6,11 +6,13 @@
         "lodash": "4.17.4",
         "moment": "2.18.1",
         "select2": "4.0.3",
-        "mutation-summary": "0.1.1"
+        "mutation-summary": "0.1.1",
+        "uuid": "3.0.1"
     },
     "devDependencies": {
         "typescript": "2.3.2",
         "@types/jquery": "2.0.43",
-        "@types/moment": "2.13.0"
+        "@types/moment": "2.13.0",
+        "@types/chrome": "0.0.46"
     }
 }

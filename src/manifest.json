@@ -7,12 +7,20 @@
 
     "browser_action": {
         "default_icon": "images/favicon.png",
-        "default_popup": "popup.html"
+        "default_popup": "index.html"
     },
 
     "author": "Edwin Beltran",
     "background": {
+        "sscripts": [
+            "js/eventPage.js"
+        ],
         "persitent": false
     },
-    "offline_enabled": false
+    "offline_enabled": false,
+    "permissions": [
+        "storage",
+        "notifications",
+        "contextMenus"
+    ]
 }
