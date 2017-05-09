@@ -6,21 +6,17 @@
     "description": "Extension for AtlanticBT. This extension implements missing features needed by ABT from the 'Lightning for Gmail' plugin from Salesforce.",
 
     "browser_action": {
-        "default_icon": "images/favicon.png",
-        "default_popup": "index.html"
+        "default_icon": "images/favicon_black.png"
     },
 
     "author": "Edwin Beltran",
-    "background": {
-        "sscripts": [
-            "js/eventPage.js"
-        ],
-        "persitent": false
-    },
     "offline_enabled": false,
     "permissions": [
-        "storage",
-        "notifications",
-        "contextMenus"
-    ]
+        "https://mail.google.com/",
+        "https://inbox.google.com/"
+    ],
+    "content_scripts": [{
+        "matches": ["https://mail.google.com/*", "https://inbox.google.com/*"],
+        "js": ["js/libs/inboxsdk.js", "js/app/index.js"]
+    }]
 }
