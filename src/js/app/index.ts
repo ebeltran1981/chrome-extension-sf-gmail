@@ -1,19 +1,22 @@
-require('../libs/inboxsdk');
+require('../../css/index.css');
+//require('../libs/inboxsdk.js');
 
-declare let InboxSDK: any;
+// require('../libs/inboxsdk');
 
-InboxSDK.load('1.0', 'sdk_abt-gmail-sf_27c6a0fc79').then((sdk) => {
+// declare let InboxSDK: any;
 
-  // the SDK has been loaded, now do something with it!
-  sdk.Compose.registerComposeViewHandler((composeView) => {
+// InboxSDK.load('1.0', 'sdk_abt-gmail-sf_27c6a0fc79').then((sdk) => {
 
-    // a compose view has come into existence, do something with it!
-    composeView.addButton({
-      title: "My Nifty Button!",
-      iconUrl: 'https://example.com/foo.png',
-      onClick: (event) => {
-        event.composeView.insertTextIntoBodyAtCursor('Hello World!');
-      },
-    });
-  });
-});
+//   // the SDK has been loaded, now do something with it!
+//   sdk.Compose.registerComposeViewHandler((composeView) => {
+
+//     // a compose view has come into existence, do something with it!
+//     composeView.addButton({
+//       title: "My Nifty Button!",
+//       iconUrl: 'https://example.com/foo.png',
+//       onClick: (event) => {
+//         event.composeView.insertTextIntoBodyAtCursor('Hello World!');
+//       },
+//     });
+//   });
+// });

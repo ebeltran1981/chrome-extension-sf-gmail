@@ -1,23 +1,15 @@
 {
-    "compileOnSave": true,
+    "compileOnSave": false,
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "lib": [
             "dom",
-            "es2015",
-            "es2016"
+            "es2015"
         ],
-        "jsx": "preserve",
-        "target": "es2016",
-        "module": "es2015",
-        "moduleResolution": "node",
-        "noImplicitAny": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "removeComments": false,
+        "target": "es2015",
+        "module": "commonjs",
+        "removeComments": true,
         "preserveConstEnums": true,
-        "sourceMap": true,
-        "skipLibCheck": true
+        "sourceMap": true
     },
     "exclude": [
         "node_modules"

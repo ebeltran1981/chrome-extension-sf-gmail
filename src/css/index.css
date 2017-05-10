@@ -1,3 +1,7 @@
 h1 {
     color: darkcyan;
 }
+
+.icon {
+    background-image: url('../images/favicon_black.png');
+}

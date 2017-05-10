@@ -1,15 +1,33 @@
-const htmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
-const webpack = require('webpack'); //to access built-in plugins
-const extractTextPlugin = require("extract-text-webpack-plugin");
-const path = require('path');
+let webpack = require('webpack'); //to access built-in plugins
+let htmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+let extractTextPlugin = require("extract-text-webpack-plugin");
+let path = require('path');
+let cleanWebpackPlugin = require('clean-webpack-plugin')
+
+// the clean options to use
+let cleanOptions = {
+    root: __dirname,
+    verbose: true,
+    dry: false
+}
+
+// extract text options
+let extractTextOptions = {
+    filename: './css/[name].[chunkhash].css'
+}
+
+// the html options
+let htmlOptions = {
+    template: './src/index.html'
+}
 
 module.exports = {
-    entry: [
-        './src/js/app/index.ts',
-        './src/css/index.css'
-    ],
+    entry: {
+        inboxsdk: './src/js/libs/inboxsdk.js',
+        main: './src/js/app/index.ts'
+    },
     output: {
-        filename: 'js/bundle.js',
+        filename: './js/[name].[chunkhash].js',
         path: path.resolve(__dirname, 'dist')
     },
     module: {
@@ -24,15 +42,40 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader'
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
+                loaders: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: './images/[name].[hash].[ext]'
+                        }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        query: {
+                            pngquant: {
+                                quality: '65-90',
+                                speed: 4,
+                                optimizationLevel: 7
+                            },
+                            gifsicle: {
+                                interlaced: false
+                            }
+                        }
+                    }
+                ]
             }
         ]
     },
     plugins: [
-        new extractTextPlugin('./css/index.css'),
+        new cleanWebpackPlugin(['dist'], cleanOptions),
+        new extractTextPlugin(extractTextOptions),
         //new webpack.optimize.UglifyJsPlugin(),
-        new htmlWebpackPlugin({ template: './src/index.html' })
+        new htmlWebpackPlugin(htmlOptions)
     ],
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
-    },
+    }
 }
