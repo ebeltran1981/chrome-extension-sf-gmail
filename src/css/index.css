@@ -1,7 +1,19 @@
-h1 {
-    color: darkcyan;
+.icon_black16 {
+    background-image: url('./../images/favicon_black16.png');
 }
 
-.icon {
-    background-image: url('../images/favicon_black.png');
+.icon_black24 {
+    background-image: url('./../images/favicon_black24.png');
+}
+
+.icon_black32 {
+    background-image: url('./../images/favicon_black32.png');
+}
+
+.icon_black48 {
+    background-image: url('./../images/favicon_black48.png');
+}
+
+.icon_black128 {
+    background-image: url('./../images/favicon_black128.png');
 }

@@ -1,5 +1,4 @@
 let webpack = require('webpack'); //to access built-in plugins
-let htmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
 let extractTextPlugin = require("extract-text-webpack-plugin");
 let path = require('path');
 let cleanWebpackPlugin = require('clean-webpack-plugin')
@@ -13,21 +12,17 @@ let cleanOptions = {
 
 // extract text options
 let extractTextOptions = {
-    filename: './css/[name].[chunkhash].css'
-}
-
-// the html options
-let htmlOptions = {
-    template: './src/index.html'
+    filename: '[name].css'
 }
 
 module.exports = {
-    entry: {
-        inboxsdk: './src/js/libs/inboxsdk.js',
-        main: './src/js/app/index.ts'
-    },
+    entry: [
+        './src/js/app/index.ts',
+        './src/css/index.css',
+        './src/manifest.json'
+    ],
     output: {
-        filename: './js/[name].[chunkhash].js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist')
     },
     module: {
@@ -37,19 +32,22 @@ module.exports = {
                 use: extractTextPlugin.extract({
                     fallback: "style-loader",
                     use: "css-loader"
-                })
+                }),
+                exclude: /node_modules/
             },
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader'
+                use: 'ts-loader',
+                exclude: /node_modules/
             },
             {
-                test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
+                test: /\.(gif|png|jpe?g|svg)$/i,
+                exclude: /node_modules/,
                 loaders: [
                     {
                         loader: 'file-loader',
                         options: {
-                            name: './images/[name].[hash].[ext]'
+                            name: '[name].[ext]'
                         }
                     },
                     {
@@ -66,14 +64,37 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.(json)$/,
+                exclude: /node_modules/,
+                loaders: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]'
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(eot|ttf|woff|woff2)$/,
+                exclude: /node_modules/,
+                loaders: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]'
+                        }
+                    }
+                ]
             }
         ]
     },
     plugins: [
         new cleanWebpackPlugin(['dist'], cleanOptions),
         new extractTextPlugin(extractTextOptions),
-        //new webpack.optimize.UglifyJsPlugin(),
-        new htmlWebpackPlugin(htmlOptions)
+        new webpack.optimize.UglifyJsPlugin(),
     ],
     resolve: {
         extensions: ['.ts', '.tsx', '.js']

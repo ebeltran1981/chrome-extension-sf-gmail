@@ -5,22 +5,31 @@
   "scripts": {
     "start": "concurrently \"tsc\" \"webpack-dev-server -w\""
   },
-  "dependencies": {},
+  "license": "MIT",
+  "repository": {
+    "url": "https://www.atlanticbt.com"
+  },
+  "dependencies": {
+    "jquery": "3.2.1",
+    "font-awesome": "4.7.0",
+    "lodash": "4.17.4",
+    "gmail-js": "0.6.10"
+  },
   "devDependencies": {
     "@types/chrome": "0.0.46",
     "@types/webpack": "2.2.15",
-    "clean-webpack-plugin": "^0.1.16",
+    "@types/lodash": "4.14.50",
+    "@types/jquery": "2.0.43",
+    
+    "clean-webpack-plugin": "0.1.16",
     "concurrently": "3.4.0",
     "css-loader": "0.28.1",
-    "eslint": "3.19.0",
-    "extract-text-webpack-plugin": "^2.1.0",
+    "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.11.1",
-    "html-webpack-plugin": "2.28.0",
-    "image-webpack-loader": "^3.3.1",
+    "image-webpack-loader": "3.3.1",
     "style-loader": "0.17.0",
-    "ts-loader": "^2.0.3",
-    "tslint": "5.2.0",
-    "typescript": "^2.2.1",
+    "ts-loader": "2.0.3",
+    "typescript": "2.2.1",
     "webpack": "2.5.1"
   }
 }

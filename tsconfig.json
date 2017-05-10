@@ -1,17 +1,16 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
+        "target": "es2015",
         "lib": [
             "dom",
             "es2015"
         ],
-        "target": "es2015",
         "module": "commonjs",
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "sourceMap": true
-    },
-    "exclude": [
-        "node_modules"
-    ]
+        "sourceMap": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "skipLibCheck": true
+    }
 }
