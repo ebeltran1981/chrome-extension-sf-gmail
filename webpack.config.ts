@@ -10,15 +10,15 @@ let cleanOptions = {
     dry: false
 }
 
-// extract text options
-let extractTextOptions = {
-    filename: '[name].css'
-}
+let extractSass = new extractTextPlugin({
+    filename: "[name].css",
+    disable: process.env.NODE_ENV === "development"
+});
 
 module.exports = {
     entry: [
-        './src/js/app/index.ts',
-        './src/css/index.css',
+        './src/ts/index.ts',
+        './src/scss/index.scss',
         './src/manifest.json'
     ],
     output: {
@@ -28,12 +28,33 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: extractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                }),
-                exclude: /node_modules/
+                enforce: 'pre',
+                test: /\.js$/,
+                loader: "source-map-loader"
+            },
+            {
+                enforce: 'pre',
+                test: /\.tsx?$/,
+                use: "source-map-loader"
+            },
+            {
+                test: /\.(eot|ttf|woff|woff2)$/,
+                exclude: /node_modules/,
+                use: 'file-loader'
+            },
+            {
+                test: /\.scss$/,
+                use: extractSass.extract({
+                    use: [
+                        {
+                            loader: "css-loader"
+                        },
+                        {
+                            loader: "sass-loader"
+                        }
+                    ],
+                    fallback: "style-loader"
+                })
             },
             {
                 test: /\.tsx?$/,
@@ -76,27 +97,16 @@ module.exports = {
                         }
                     }
                 ]
-            },
-            {
-                test: /\.(eot|ttf|woff|woff2)$/,
-                exclude: /node_modules/,
-                loaders: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]'
-                        }
-                    }
-                ]
             }
         ]
     },
     plugins: [
         new cleanWebpackPlugin(['dist'], cleanOptions),
-        new extractTextPlugin(extractTextOptions),
-        new webpack.optimize.UglifyJsPlugin(),
+        extractSass
+        //new webpack.optimize.UglifyJsPlugin(),
     ],
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
-    }
+    },
+    devtool: 'inline-source-map'
 }
