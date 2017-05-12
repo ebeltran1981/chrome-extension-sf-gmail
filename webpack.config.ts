@@ -1,46 +1,49 @@
-let webpack = require('webpack'); //to access built-in plugins
-let extractTextPlugin = require("extract-text-webpack-plugin");
-let path = require('path');
-let cleanWebpackPlugin = require('clean-webpack-plugin')
+/*
+Copyright AtlanticBT.
+ */
+
+import * as cleanWebpackPlugin from "clean-webpack-plugin";
+import * as extractTextPlugin from "extract-text-webpack-plugin";
+import * as path from "path";
+import * as webpack from "webpack"; // to access built-in plugins
 
 // the clean options to use
-let cleanOptions = {
+const cleanOptions = {
+    dry: false,
     root: __dirname,
-    verbose: true,
-    dry: false
-}
+    verbose: true
+};
 
-let extractSass = new extractTextPlugin({
+const extractSass = new extractTextPlugin({
     filename: "[name].css",
-    disable: process.env.NODE_ENV === "development"
 });
 
 module.exports = {
     entry: [
-        './src/ts/index.ts',
-        './src/scss/index.scss',
-        './src/manifest.json'
+        "./src/ts/index.ts",
+        "./src/scss/index.scss",
+        "./src/manifest.json"
     ],
     output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist')
+        filename: "[name].js",
+        path: path.resolve(__dirname, "dist"),
     },
     module: {
         rules: [
             {
-                enforce: 'pre',
+                enforce: "pre",
                 test: /\.js$/,
-                loader: "source-map-loader"
+                loader: "source-map-loader",
             },
             {
-                enforce: 'pre',
+                enforce: "pre",
                 test: /\.tsx?$/,
-                use: "source-map-loader"
+                use: "source-map-loader",
             },
             {
                 test: /\.(eot|ttf|woff|woff2)$/,
                 exclude: /node_modules/,
-                use: 'file-loader'
+                use: "file-loader",
             },
             {
                 test: /\.scss$/,
@@ -58,7 +61,7 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                use: "ts-loader",
                 exclude: /node_modules/
             },
             {
@@ -66,16 +69,16 @@ module.exports = {
                 exclude: /node_modules/,
                 loaders: [
                     {
-                        loader: 'file-loader',
+                        loader: "file-loader",
                         options: {
-                            name: '[name].[ext]'
+                            name: "[name].[ext]"
                         }
                     },
                     {
-                        loader: 'image-webpack-loader',
+                        loader: "image-webpack-loader",
                         query: {
                             pngquant: {
-                                quality: '65-90',
+                                quality: "65-90",
                                 speed: 4,
                                 optimizationLevel: 7
                             },
@@ -91,9 +94,9 @@ module.exports = {
                 exclude: /node_modules/,
                 loaders: [
                     {
-                        loader: 'file-loader',
+                        loader: "file-loader",
                         options: {
-                            name: '[name].[ext]'
+                            name: "[name].[ext]"
                         }
                     }
                 ]
@@ -101,12 +104,12 @@ module.exports = {
         ]
     },
     plugins: [
-        new cleanWebpackPlugin(['dist'], cleanOptions),
-        extractSass
-        //new webpack.optimize.UglifyJsPlugin(),
+        new cleanWebpackPlugin(["dist"], cleanOptions),
+        extractSass,
+        // new webpack.optimize.UglifyJsPlugin(),
     ],
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: [".ts", ".tsx", ".js"]
     },
-    devtool: 'inline-source-map'
-}
+    devtool: "inline-source-map"
+};

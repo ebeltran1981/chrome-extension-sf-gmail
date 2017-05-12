@@ -1,8 +1,12 @@
-require('gmail-js');
+/*
+Copyright AtlanticBT.
+ */
 
-import * as $ from 'jquery';
+import * as $ from "jquery";
 
-module AtlanticBTApp {
+import { ComposeElements } from "./elements";
+
+namespace AtlanticBTApp {
     export class ExtensionHelper {
         private _gmail: Gmail;
 
@@ -25,35 +29,35 @@ module AtlanticBTApp {
 
     export class EventsHelper {
         private _gmail: Gmail;
+        private _composeEl: ComposeElements;
 
         constructor(gmail: Gmail) {
             this._gmail = gmail;
+            this._composeEl = new ComposeElements();
         }
 
-        initialize(): void {
-            this._gmail.observe.on('open_email', this.openEmail.bind(this));
-            this._gmail.observe.on('view_thread', this.viewThread.bind(this));
-            this._gmail.observe.on('view_email', this.viewEmail.bind(this));
-            this._gmail.observe.on('load_email_menu', (match: JQuery) => {
-                console.log('Menu loaded', match);
+        public initialize(): void {
+            this._gmail.observe.on("compose", this.composeEmail.bind(this));
+            this._gmail.tools.add_toolbar_button("<label>Testing</label>", () => {
+                debugger;
+            }, "abt-toolbar");
+        }
 
-                // insert a new element into the menu
-                $('<div />').addClass('J-N-Jz')
-                    .html('New element')
-                    .appendTo(match);
+        private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
+            const gmail = this._gmail;
+
+            const composes = gmail.dom.composes();
+            $.each(composes, (idx: number, item: GmailDomCompose) => {
+                gmail.tools.add_compose_button(item, "<label>Testing</label>", () => {
+                    debugger;
+                }, "abt-toolbar");
+                // const hasToolbar = this._composeEl.hasToolbar(item.$el);
+                // if (!hasToolbar) {
+                //     const composeForm = item.$el.find("form");
+                //     const toolbar = this._composeEl.toolbar();
+                //     composeForm.appendTo(toolbar);
+                // }
             });
-        }
-
-        openEmail(id: string, url: string, body: string, xhr: JQueryXHR): void {
-            debugger;
-        }
-
-        viewEmail(email: GmailDomEmail): void {
-            debugger;
-        }
-
-        viewThread(thread: GmailDomThread): void {
-            debugger;
         }
     }
 }
