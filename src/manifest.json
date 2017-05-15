@@ -12,7 +12,7 @@
         "48": "favicon_black48.png",
         "128": "favicon_black128.png"
     },
-    
+
     "page_action": {
         "default_icon": { // optional
             "16": "favicon_black16.png", // optional
@@ -20,7 +20,13 @@
             "32": "favicon_black32.png" // optional
         }
     },
-
+    "web_accessible_resources": [
+        "fontawesome-webfont.eot",
+        "fontawesome-webfont.svg",
+        "fontawesome-webfont.ttf",
+        "fontawesome-webfont.woff",
+        "fontawesome-webfont.woff2"
+    ],
     "author": "Edwin Beltran",
     "offline_enabled": false,
     "permissions": [

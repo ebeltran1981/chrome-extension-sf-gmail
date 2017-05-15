@@ -11,7 +11,10 @@ namespace AtlanticBTApp {
 
     export class ComposeElements {
         public toolbar(): JQuery {
-            const toolbar = $("<div/>").addClass(cssClasses.abtToolbar);
+            const toolbar = $(document.createElement("div"));
+
+            toolbar.addClass(cssClasses.abtToolbar);
+
             return toolbar;
         }
 

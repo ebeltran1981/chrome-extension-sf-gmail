@@ -2,7 +2,10 @@
 Copyright AtlanticBT.
  */
 
+import "font-awesome-sass-loader!./config/font-awesome.config";
 import "gmail-js";
+import "../manifest.json";
+import "../scss/index.scss";
 
 import * as $ from "jquery";
 

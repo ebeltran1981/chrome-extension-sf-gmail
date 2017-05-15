@@ -7,23 +7,22 @@ import * as extractTextPlugin from "extract-text-webpack-plugin";
 import * as path from "path";
 import * as webpack from "webpack"; // to access built-in plugins
 
-// the clean options to use
 const cleanOptions = {
     dry: false,
     root: __dirname,
     verbose: true
 };
 
+const cleanWebpack = new cleanWebpackPlugin(["dist"], cleanOptions);
+
 const extractSass = new extractTextPlugin({
     filename: "[name].css",
 });
 
+const jsUglify = new webpack.optimize.UglifyJsPlugin();
+
 module.exports = {
-    entry: [
-        "./src/ts/index.ts",
-        "./src/scss/index.scss",
-        "./src/manifest.json"
-    ],
+    entry: "./src/ts/index.ts",
     output: {
         filename: "[name].js",
         path: path.resolve(__dirname, "dist"),
@@ -41,9 +40,30 @@ module.exports = {
                 use: "source-map-loader",
             },
             {
-                test: /\.(eot|ttf|woff|woff2)$/,
-                exclude: /node_modules/,
-                use: "file-loader",
+                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: [
+                    {
+                        loader: "url-loader",
+                        options: {
+                            name: "[name].[ext]",
+                            limit: 10000,
+                            mimetype: "application/font-woff",
+                            publicPath: "chrome-extension://__MSG_@@extension_id__/"
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            name: "[name].[ext]",
+                            publicPath: "chrome-extension://__MSG_@@extension_id__/"
+                        }
+                    }
+                ]
             },
             {
                 test: /\.scss$/,
@@ -61,12 +81,10 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                use: "ts-loader",
-                exclude: /node_modules/
+                use: "ts-loader"
             },
             {
-                test: /\.(gif|png|jpe?g|svg)$/i,
-                exclude: /node_modules/,
+                test: /\.(gif|png|jpe?g)$/i,
                 loaders: [
                     {
                         loader: "file-loader",
@@ -91,7 +109,6 @@ module.exports = {
             },
             {
                 test: /\.(json)$/,
-                exclude: /node_modules/,
                 loaders: [
                     {
                         loader: "file-loader",
@@ -104,9 +121,9 @@ module.exports = {
         ]
     },
     plugins: [
-        new cleanWebpackPlugin(["dist"], cleanOptions),
+        cleanWebpack,
         extractSass,
-        // new webpack.optimize.UglifyJsPlugin(),
+        // jsUglify
     ],
     resolve: {
         extensions: [".ts", ".tsx", ".js"]

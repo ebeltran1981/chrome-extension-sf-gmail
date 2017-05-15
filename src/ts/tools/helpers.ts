@@ -38,9 +38,6 @@ namespace AtlanticBTApp {
 
         public initialize(): void {
             this._gmail.observe.on("compose", this.composeEmail.bind(this));
-            this._gmail.tools.add_toolbar_button("<label>Testing</label>", () => {
-                debugger;
-            }, "abt-toolbar");
         }
 
         private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
@@ -48,9 +45,30 @@ namespace AtlanticBTApp {
 
             const composes = gmail.dom.composes();
             $.each(composes, (idx: number, item: GmailDomCompose) => {
-                gmail.tools.add_compose_button(item, "<label>Testing</label>", () => {
-                    debugger;
-                }, "abt-toolbar");
+                const toolbar = $(document.createElement("div"));
+                toolbar.addClass("aoD az6 abt-toolbar");
+
+                // Bcc Salesforce
+                const chkBccSF = $(document.createElement("input"));
+                chkBccSF.attr("type", "checkbox");
+                const lblBccSF = $(document.createElement("label"));
+                lblBccSF.addClass("checkbox");
+                lblBccSF.text("Bcc Salesforce");
+                lblBccSF.prepend(chkBccSF);
+
+                // Button Send
+                const btnSend = $(document.createElement("button"));
+                const btnSendIcon = $(document.createElement("i"));
+                btnSendIcon.addClass("fa fa-2x fa-address-book");
+                btnSend.append(btnSendIcon);
+
+                // Appending elements to Toolbar
+                toolbar.append(lblBccSF);
+                toolbar.append(btnSend);
+
+                const form = item.$el.find("form");
+                form.append(toolbar);
+                debugger;
                 // const hasToolbar = this._composeEl.hasToolbar(item.$el);
                 // if (!hasToolbar) {
                 //     const composeForm = item.$el.find("form");
