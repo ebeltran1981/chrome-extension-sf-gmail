@@ -10,10 +10,11 @@
     "url": "https://www.atlanticbt.com"
   },
   "dependencies": {
-    "jquery": "3.2.1",
     "font-awesome": "4.7.0",
-    "lodash": "4.17.4",
-    "gmail-js": "0.6.10"
+    "gmail-js": "0.6.10",
+    "jquery": "3.2.1",
+    "jsforce": "1.8.0",
+    "lodash": "4.17.4"
   },
   "devDependencies": {
     "@types/chrome": "0.0.46",

@@ -9,10 +9,12 @@ import "../scss/index.scss";
 
 import * as $ from "jquery";
 
+import { SforceAuth } from "./services/salesforce.services";
 import { EventsHelper, ExtensionHelper } from "./tools/helpers";
 
 namespace AtlanticBTApp {
     const gmail = new Gmail($);
+    const force = new SforceAuth();
 
     const extensionHelper = new ExtensionHelper(gmail);
     const eventsHelper = new EventsHelper(gmail);

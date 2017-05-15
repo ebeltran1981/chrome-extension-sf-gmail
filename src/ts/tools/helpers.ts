@@ -42,39 +42,26 @@ namespace AtlanticBTApp {
 
         private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
             const gmail = this._gmail;
+            const composeEl = this._composeEl;
 
             const composes = gmail.dom.composes();
             $.each(composes, (idx: number, item: GmailDomCompose) => {
-                const toolbar = $(document.createElement("div"));
-                toolbar.addClass("aoD az6 abt-toolbar");
+                const form = item.$el.find("form");
+                const toolbar = composeEl.add_toolbar(form);
 
                 // Bcc Salesforce
-                const chkBccSF = $(document.createElement("input"));
-                chkBccSF.attr("type", "checkbox");
-                const lblBccSF = $(document.createElement("label"));
-                lblBccSF.addClass("checkbox");
-                lblBccSF.text("Bcc Salesforce");
-                lblBccSF.prepend(chkBccSF);
+                const chk = composeEl.checkbox("Bcc Salesforce", "checkbox", false);
+                toolbar.append(chk);
+            });
+        }
+    }
 
-                // Button Send
-                const btnSend = $(document.createElement("button"));
-                const btnSendIcon = $(document.createElement("i"));
-                btnSendIcon.addClass("fa fa-2x fa-address-book");
-                btnSend.append(btnSendIcon);
+    export class SalesforceEvents {
+        private _force: any;
 
-                // Appending elements to Toolbar
-                toolbar.append(lblBccSF);
-                toolbar.append(btnSend);
-
-                const form = item.$el.find("form");
-                form.append(toolbar);
-                debugger;
-                // const hasToolbar = this._composeEl.hasToolbar(item.$el);
-                // if (!hasToolbar) {
-                //     const composeForm = item.$el.find("form");
-                //     const toolbar = this._composeEl.toolbar();
-                //     composeForm.appendTo(toolbar);
-                // }
+        constructor() {
+            this._force.browser.on("connect", (conn: any) => {
+                
             });
         }
     }
