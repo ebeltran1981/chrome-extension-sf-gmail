@@ -37,6 +37,7 @@ namespace AtlanticBTApp {
         }
 
         public initialize(): void {
+            // Gmail inits
             this._gmail.observe.on("compose", this.composeEmail.bind(this));
         }
 
@@ -52,16 +53,6 @@ namespace AtlanticBTApp {
                 // Bcc Salesforce
                 const chk = composeEl.checkbox("Bcc Salesforce", "checkbox", false);
                 toolbar.append(chk);
-            });
-        }
-    }
-
-    export class SalesforceEvents {
-        private _force: any;
-
-        constructor() {
-            this._force.browser.on("connect", (conn: any) => {
-                
             });
         }
     }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jsforce/1.8.0/jsforce.min.js"></script>
+    <script>
+        jsforce.browser.init({
+            clientId: '3MVG9i1HRpGLXp.qijeggn1OC__TFqN3KFcMkAkPDAVJEfnfNn9VynFLunBuDnrory4en_kK_hfu861CgL2VZ',
+            redirectUri: 'http://localhost:8080'
+        });
+        jsforce.browser.on('connect', function (conn) {
+            debugger;
+            conn.query('SELECT Id, Name FROM Account', function (err, res) {
+                debugger;
+                if (err) {
+                    return console.error(err);
+                }
+                console.log(res);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <button onclick="javascript:jsforce.browser.login();">Login</button>
+</body>
+
+</html>
