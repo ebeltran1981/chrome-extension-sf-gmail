@@ -14,7 +14,6 @@
     "gmail-js": "0.6.10",
     "jquery": "3.2.1",
     "jsforce": "1.8.0",
-    "jsforce-ajax-proxy": "1.0.0",
     "lodash": "4.17.4"
   },
   "devDependencies": {

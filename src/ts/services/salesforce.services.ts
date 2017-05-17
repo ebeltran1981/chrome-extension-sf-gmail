@@ -4,11 +4,10 @@ Copyright AtlanticBT.
 
 
 import * as jsforce from "jsforce";
-import * as jsforceAjaxProxy from "jsforce-ajax-proxy";
 import * as _ from "lodash";
 
 namespace AtlanticBTApp {
-    export class SforceAuthModel {
+    class SforceAuthModel {
         public access_token: string;
         public instance_url: string;
         public id: string;
@@ -21,7 +20,6 @@ namespace AtlanticBTApp {
 
     abstract class SforceAuth {
         protected _ck: string = "3MVG9i1HRpGLXp.qijeggn1OC__TFqN3KFcMkAkPDAVJEfnfNn9VynFLunBuDnrory4en_kK_hfu861CgL2VZ";
-        protected _cs: string = "8452890720037761370";
         protected _redirectUri: string = "https://mail.google.com/mail/u/0";
         protected _instanceUrl: string = "https://na40.salesforce.com";
     }
@@ -35,23 +33,7 @@ namespace AtlanticBTApp {
          * initialize jsforce
          */
         public initialize() {
-            debugger;
-
             const sforceModel = this.hash_parser(location.hash);
-
-            // jsforce.browser.init({
-            //     clientId: this._ck,
-            //     redirectUri: this._redirectUri
-            // });
-
-            // jsforce.browser.on("connect", (conn: any) => {
-            //     debugger;
-            //     conn.query("SELECT Id, Name FROM Account", (err, res) => {
-            //         debugger;
-            //         if (err) { return console.error(err); }
-            //         console.log(res);
-            //     });
-            // });
 
             if (_.isEmpty(sforceModel)) {
                 jsforce.browser.login({
@@ -59,11 +41,9 @@ namespace AtlanticBTApp {
                     redirectUri: this._redirectUri
                 });
             } else {
-                // TODO: do something with the token
                 const conn = new jsforce.Connection({
                     oauth2: {
                         clientId: this._ck,
-                        clientSecret: this._cs,
                         redirectUri: this._redirectUri
                     },
                     instanceUrl: this._instanceUrl,
@@ -77,7 +57,9 @@ namespace AtlanticBTApp {
                 });
 
                 conn.query("SELECT Id, Name FROM Account", (err, res) => {
-                    if (err) { return this.handleError(err); }
+                    if (err) {
+                        return this.handleError(err);
+                    }
                     this.handleResult(res);
                 });
             }
@@ -104,11 +86,11 @@ namespace AtlanticBTApp {
         }
 
         private handleError(err) {
-            debugger;
+            console.log("Error", err);
         }
 
-        private handleResult(err) {
-            debugger;
+        private handleResult(res) {
+            console.log("Success", res);
         }
     }
 }
