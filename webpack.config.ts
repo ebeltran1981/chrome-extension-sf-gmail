@@ -16,15 +16,17 @@ const cleanOptions = {
 const cleanWebpack = new cleanWebpackPlugin(["dist"], cleanOptions);
 
 const extractSass = new extractTextPlugin({
-    filename: "[name].css",
+    filename: "css/[name].css",
 });
 
 const jsUglify = new webpack.optimize.UglifyJsPlugin();
 
 module.exports = {
-    entry: "./src/ts/index.ts",
+    entry: {
+        main: "./src/ts/index.ts"
+    },
     output: {
-        filename: "[name].js",
+        filename: "js/[name].js",
         path: path.resolve(__dirname, "dist"),
     },
     module: {
@@ -45,7 +47,7 @@ module.exports = {
                     {
                         loader: "url-loader",
                         options: {
-                            name: "[name].[ext]",
+                            name: "fonts/[name].[ext]",
                             limit: 10000,
                             mimetype: "application/font-woff",
                             publicPath: "chrome-extension://__MSG_@@extension_id__/"
@@ -59,7 +61,7 @@ module.exports = {
                     {
                         loader: "file-loader",
                         options: {
-                            name: "[name].[ext]",
+                            name: "fonts/[name].[ext]",
                             publicPath: "chrome-extension://__MSG_@@extension_id__/"
                         }
                     }
@@ -89,7 +91,7 @@ module.exports = {
                     {
                         loader: "file-loader",
                         options: {
-                            name: "[name].[ext]"
+                            name: "images/[name].[ext]"
                         }
                     },
                     {
@@ -103,6 +105,17 @@ module.exports = {
                             gifsicle: {
                                 interlaced: false
                             }
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(html)$/i,
+                loaders: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            name: "views/[name].[ext]"
                         }
                     }
                 ]

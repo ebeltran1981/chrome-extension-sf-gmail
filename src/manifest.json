@@ -6,30 +6,31 @@
     "description": "Extension for AtlanticBT. This extension implements missing features needed by ABT from the 'Lightning for Gmail' plugin from Salesforce.",
 
     "icons": {
-        "16": "favicon_black16.png",
-        "24": "favicon_black24.png",
-        "32": "favicon_black32.png",
-        "48": "favicon_black48.png",
-        "128": "favicon_black128.png"
+        "16": "images/favicon_black16.png",
+        "24": "images/favicon_black24.png",
+        "32": "images/favicon_black32.png",
+        "48": "images/favicon_black48.png",
+        "128": "images/favicon_black128.png"
     },
 
     "page_action": {
-        "default_icon": { // optional
-            "16": "favicon_black16.png", // optional
-            "24": "favicon_black24.png", // optional
-            "32": "favicon_black32.png" // optional
-        }
+        "default_icon": {
+            "16": "images/favicon_black16.png",
+            "24": "images/favicon_black24.png",
+            "32": "images/favicon_black32.png"
+        },
+        "default_title": "AtlanticBT Gmail Extensions"
     },
     "web_accessible_resources": [
-        "fontawesome-webfont.eot",
-        "fontawesome-webfont.svg",
-        "fontawesome-webfont.ttf",
-        "fontawesome-webfont.woff",
-        "fontawesome-webfont.woff2"
+        "fonts/fontawesome-webfont.eot",
+        "fonts/fontawesome-webfont.svg",
+        "fonts/fontawesome-webfont.ttf",
+        "fonts/fontawesome-webfont.woff",
+        "fonts/fontawesome-webfont.woff2"
     ],
     "author": "Edwin Beltran",
-    "offline_enabled": false,
     "permissions": [
+        "storage",
         "https://mail.google.com/",
         "https://inbox.google.com/",
         "https://*.salesforce.com/",
@@ -40,7 +41,11 @@
             "https://mail.google.com/*",
             "https://inbox.google.com/*"
         ],
-        "js": ["main.js"],
-        "css": ["main.css"]
+        "css": [
+            "css/main.css"
+        ],
+        "js": [
+            "js/main.js"
+        ]
     }]
 }

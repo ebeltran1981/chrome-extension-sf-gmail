@@ -2,9 +2,11 @@
 Copyright AtlanticBT.
 */
 
-
 import * as jsforce from "jsforce";
 import * as _ from "lodash";
+
+import { ChromeStorageModel, SforceErrorModel, SforceUserModel } from "../models/auth.model";
+import { ChromeStorageKeys, SforceErrorCodes } from "../tools/constants";
 
 namespace AtlanticBTApp {
     class SforceAuthModel {
@@ -19,12 +21,15 @@ namespace AtlanticBTApp {
     }
 
     abstract class SforceAuth {
+        protected _currentUser: SforceUserModel = null;
         protected _ck: string = "3MVG9i1HRpGLXp.qijeggn1OC__TFqN3KFcMkAkPDAVJEfnfNn9VynFLunBuDnrory4en_kK_hfu861CgL2VZ";
         protected _redirectUri: string = "https://mail.google.com/mail/u/0";
         protected _instanceUrl: string = "https://na40.salesforce.com";
     }
 
     export class SforceServices extends SforceAuth {
+        private _conn: any;
+
         constructor() {
             super();
         }
@@ -33,39 +38,60 @@ namespace AtlanticBTApp {
          * initialize jsforce
          */
         public initialize() {
-            const sforceModel = this.hash_parser(location.hash);
-
-            if (_.isEmpty(sforceModel)) {
-                jsforce.browser.login({
-                    clientId: this._ck,
-                    redirectUri: this._redirectUri
-                });
-            } else {
-                const conn = new jsforce.Connection({
-                    oauth2: {
-                        clientId: this._ck,
-                        redirectUri: this._redirectUri
-                    },
-                    instanceUrl: this._instanceUrl,
-                    accessToken: sforceModel.access_token
-                });
-
-                conn.on("refresh", (accessToken, res) => {
-                    // Refresh event will be fired when renewed access token
-                    // to store it in your storage for next request
-                    debugger;
-                });
-
-                conn.query("SELECT Id, Name FROM Account", (err, res) => {
-                    if (err) {
-                        return this.handleError(err);
-                    }
-                    this.handleResult(res);
-                });
-            }
+            let sforceAuth = this.hashParser(location.hash);
+            chrome.storage.sync.get(ChromeStorageKeys.Session, (items) => {
+                if (sforceAuth !== null) {
+                    this.session = sforceAuth;
+                } else if (items[ChromeStorageKeys.Session]) {
+                    sforceAuth = items[ChromeStorageKeys.Session] as SforceAuthModel;
+                    this.session = sforceAuth;
+                } else {
+                    this.login();
+                }
+            });
         }
 
-        private hash_parser(hash: string): SforceAuthModel {
+        private login(): void {
+            jsforce.browser.login({
+                clientId: this._ck,
+                redirectUri: this._redirectUri
+            });
+        }
+
+        private set session(sforceAuth: SforceAuthModel) {
+            debugger;
+            this._conn = new jsforce.Connection({
+                oauth2: {
+                    clientId: this._ck,
+                    redirectUri: this._redirectUri
+                },
+                instanceUrl: this._instanceUrl,
+                accessToken: sforceAuth.access_token
+            });
+
+            this._conn.identity({}).then((user: SforceUserModel) => {
+                debugger;
+                this._currentUser = user;
+            }, (error: SforceErrorModel) => {
+                debugger;
+                switch (error.errorCode) {
+                    case SforceErrorCodes.InvalidSession:
+                        this.login();
+                        break;
+                    default:
+                        alert(error.toString());
+                        break;
+                }
+            });
+
+            chrome.storage.sync.set({ sforce_session: sforceAuth }, () => {
+                if (chrome.runtime.lastError !== undefined) {
+                    alert("Salesforce session was not saved properly.");
+                }
+            });
+        }
+
+        private hashParser(hash: string): SforceAuthModel {
             if (_.isEmpty(hash) || hash.indexOf("salesforce.com") < 0) {
                 return null;
             }
@@ -84,25 +110,7 @@ namespace AtlanticBTApp {
 
             return sforceModel;
         }
-
-        private handleError(err) {
-            console.log("Error", err);
-        }
-
-        private handleResult(res) {
-            console.log("Success", res);
-        }
     }
 }
 
 export = AtlanticBTApp;
-
-// https://mail.google.com/mail/u/0/
-// #access_token=00D46000000oa0L%21AR8AQGQcuzLuYr7tCvriLpMw5hdAd94cB07gFENvIjc7__0A4Wbzwj3bHsMHSzqkWv1ZJrslsKwwQslA8Bc1hEfxA0vqlioL
-// &instance_url=https%3A%2F%2Fna40.salesforce.com
-// &id=https%3A%2F%2Flogin.salesforce.com%2Fid%2F00D46000000oa0LEAQ%2F00546000000ZIS8AAO
-// &issued_at=1494960174308
-// &signature=oJiTySGPhfrjzLImYnorsD06RZPkjQnz4YxvYdc3Zc4%3D
-// &state=jsforce0.popup.pk4yruh2i8m
-// &scope=id+api+web+refresh_token
-// &token_type=Bearer
