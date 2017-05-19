@@ -15,8 +15,8 @@ import { EventsHelper } from "./tools/helpers";
 
 namespace AtlanticBTApp {
     const gmail = new Gmail($);
-    const eventsHelper = new EventsHelper(gmail);
     const sforceService = new SforceServices();
+    const eventsHelper = new EventsHelper(gmail, sforceService);
 
     // initialize salesforce
     sforceService.initialize();

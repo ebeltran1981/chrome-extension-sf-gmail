@@ -4,6 +4,7 @@ Copyright AtlanticBT.
 
 import * as $ from "jquery";
 
+import { SforceServices } from "../services/salesforce.services";
 import { ComposeElements } from "./elements";
 
 namespace AtlanticBTApp {
@@ -29,10 +30,12 @@ namespace AtlanticBTApp {
 
     export class EventsHelper {
         private _gmail: Gmail;
+        private _sforce: SforceServices;
         private _composeEl: ComposeElements;
 
-        constructor(gmail: Gmail) {
+        constructor(gmail: Gmail, sforce: SforceServices) {
             this._gmail = gmail;
+            this._sforce = sforce;
             this._composeEl = new ComposeElements();
         }
 
@@ -42,8 +45,10 @@ namespace AtlanticBTApp {
         }
 
         private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
+            debugger;
             const gmail = this._gmail;
             const composeEl = this._composeEl;
+            const temp = this._sforce.connection;
 
             const composes = gmail.dom.composes();
             $.each(composes, (idx: number, item: GmailDomCompose) => {

@@ -44,11 +44,16 @@ namespace AtlanticBTApp {
                 accessToken: value
             });
 
-            this._conn.identity({}).then((user: SforceUserModel) => {
-                this._currentUser = user;
+            let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
+            this._conn.identity().then((user: SforceUserModel) => {
+                notification = {
+                    type: "basic",
+                    title: "LOGIN",
+                    message: `${user.first_name} you're logged in Salesforce!`
+                };
+                message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+                chrome.runtime.sendMessage(message);
             }, (error: SforceErrorModel) => {
-                let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
-
                 switch (error.errorCode) {
                     case SforceErrorCodes.InvalidSession:
                         notification = {
@@ -62,7 +67,7 @@ namespace AtlanticBTApp {
                     default:
                         notification = {
                             type: "basic",
-                            title: error.errorCode,
+                            title: "ERROR",
                             message: error.message
                         };
                         message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);

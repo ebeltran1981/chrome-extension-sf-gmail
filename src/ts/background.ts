@@ -6,17 +6,18 @@ import { ChromeMessageRequest, ChromeMessageResponse, ChromeMessageResponseTypeE
 import { ChromeConnectKeys, ChromeCookieCauseKeys, ChromeMessageKeys, SforceKeys, SforceValues } from "./tools/constants";
 import { createNotification } from "./tools/notifications";
 
-// let notification: chrome.notifications.NotificationOptions;
-
 chrome.runtime.onConnect.addListener((port) => {
     // Login
     if (port.name === ChromeConnectKeys.SforceLoginPort) {
+        let isLoginPortOpen = true;
         port.onMessage.addListener((msg: ChromeMessageRequest<{}>, p) => {
             // The login happened thru the initial loading of the browser
             if (msg.key === ChromeMessageKeys.SforceSessionCookie) {
                 chrome.cookies.get({ url: SforceValues.FullCookieDomain, name: SforceKeys.SessionCookie }, (cookie) => {
                     const response = new ChromeMessageResponse(ChromeMessageResponseTypeEnum.loginLoading, cookie);
-                    p.postMessage(response);
+                    if (isLoginPortOpen) {
+                        p.postMessage(response);
+                    }
                 });
             }
         });
@@ -24,35 +25,36 @@ chrome.runtime.onConnect.addListener((port) => {
         chrome.cookies.onChanged.addListener((changeInfo) => {
             if (!changeInfo.removed && changeInfo.cause === ChromeCookieCauseKeys.Explicit) {
                 if (changeInfo.cookie.name === SforceKeys.SessionCookie && changeInfo.cookie.domain === SforceValues.CookieDomain) {
-                    // notification = {
-                    //     type: "basic",
-                    //     title: "LOGIN",
-                    //     message: "You're logged in Salesforce!"
-                    // };
-                    // createNotification(notification);
                     const response = new ChromeMessageResponse(ChromeMessageResponseTypeEnum.loginExtension, changeInfo.cookie);
-                    port.postMessage(response);
+                    if (isLoginPortOpen) {
+                        port.postMessage(response);
+                    }
                 }
             }
         });
 
         port.onDisconnect.addListener((p) => {
-            debugger;
+            // debugger;
+            isLoginPortOpen = false;
         });
     }
 
     // Logout
     if (port.name === ChromeConnectKeys.SforceLogoutPort) {
+        let isLogoutPortOpen = true;
         chrome.cookies.onChanged.addListener((changeInfo) => {
             if (changeInfo.removed && changeInfo.cause === ChromeCookieCauseKeys.ExpiredOverwrite) {
                 if (changeInfo.cookie.name === SforceKeys.SessionCookie && changeInfo.cookie.domain === SforceValues.CookieDomain) {
                     const response = new ChromeMessageResponse(ChromeMessageResponseTypeEnum.logoutExtension, changeInfo.cookie);
-                    port.postMessage(response);
+                    if (isLogoutPortOpen) {
+                        port.postMessage(response);
+                    }
                 }
             }
         });
         port.onDisconnect.addListener((p) => {
-            debugger;
+            // debugger;
+            isLogoutPortOpen = false;
         });
     }
 });
