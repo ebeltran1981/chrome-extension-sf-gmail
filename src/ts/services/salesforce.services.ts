@@ -9,6 +9,8 @@ import { ChromeMessageRequest, ChromeMessageResponse } from "../models/chrome.mo
 import { SforceErrorModel, SforceUserModel } from "../models/sforce.model";
 import { ChromeConnectKeys, ChromeMessageKeys, ChromeStorageKeys, SforceErrorCodes, SforceKeys, SforceValues } from "../tools/constants";
 
+let notification: chrome.notifications.NotificationOptions;
+
 namespace AtlanticBTApp {
     export class SforceServices {
         private _conn: any;
@@ -23,7 +25,6 @@ namespace AtlanticBTApp {
             });
 
             const logoutPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLogoutPort });
-            logoutPort.postMessage(null);
             logoutPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.CookieChangeInfo>) => {
                 this.logout();
             });
@@ -34,7 +35,6 @@ namespace AtlanticBTApp {
         }
 
         public set connection(value: string) {
-            debugger;
             this._conn = new jsforce.Connection({
                 oauth2: {
                     clientId: SforceValues.OAuthId,
@@ -47,20 +47,41 @@ namespace AtlanticBTApp {
             this._conn.identity({}).then((user: SforceUserModel) => {
                 this._currentUser = user;
             }, (error: SforceErrorModel) => {
-                debugger;
+                let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
+
                 switch (error.errorCode) {
                     case SforceErrorCodes.InvalidSession:
-                        alert("Salesforce session expired or is invalid. Please login to Salesforce.");
+                        notification = {
+                            type: "basic",
+                            title: "WARNING",
+                            message: "Salesforce session expired or is invalid. Please login to Salesforce."
+                        };
+                        message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+                        chrome.runtime.sendMessage(message);
                         break;
                     default:
-                        console.error(error.toString());
+                        notification = {
+                            type: "basic",
+                            title: error.errorCode,
+                            message: error.message
+                        };
+                        message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+                        chrome.runtime.sendMessage(message);
                         break;
                 }
             });
         }
 
         public logout() {
-            debugger;
+            // TODO: implement removal of controls when user is logged out.
+            let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
+            notification = {
+                type: "basic",
+                title: "LOGOUT",
+                message: "You're not logged in Salesforce!"
+            };
+            message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+            chrome.runtime.sendMessage(message);
         }
     }
 }

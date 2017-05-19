@@ -1,3 +1,11 @@
+.icon-black-svg {
+    background-image: url('./../images/favicon_black.svg');
+}
+
+.icon-black {
+    background-image: url('./../images/favicon_black.png');
+}
+
 .icon-black16 {
     background-image: url('./../images/favicon_black16.png');
 }
@@ -14,6 +22,10 @@
     background-image: url('./../images/favicon_black48.png');
 }
 
+.icon-black80 {
+    background-image: url('./../images/favicon_black80.png');
+}
+
 .icon-black128 {
     background-image: url('./../images/favicon_black128.png');
 }
@@ -24,7 +36,9 @@
     // padding: 5px;
     // border-bottom: 1px solid #cfcfcf;
 }
-.checkbox label, .radio label {
+
+.checkbox label,
+.radio label {
     min-height: 20px;
     padding-left: 20px;
     margin-bottom: 0;
@@ -32,19 +46,24 @@
     cursor: pointer;
 }
 
-.checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
+.checkbox input[type=checkbox],
+.checkbox-inline input[type=checkbox],
+.radio input[type=radio],
+.radio-inline input[type=radio] {
     position: absolute;
     margin-top: 4px\9;
     margin-left: -20px;
 }
 
-input[type=checkbox], input[type=radio] {
+input[type=checkbox],
+input[type=radio] {
     margin: 1px 0 0;
     margin-top: 1px\9;
     line-height: normal;
 }
 
-input[type=checkbox], input[type=radio] {
+input[type=checkbox],
+input[type=radio] {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;

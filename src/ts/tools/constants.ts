@@ -9,11 +9,18 @@ namespace AtlanticBTApp {
 
     export class ChromeMessageKeys {
         public static readonly SforceSessionCookie = "sforce_session_cookie";
+        public static readonly CreateNotification = "create_notification";
     }
 
     export class ChromeConnectKeys {
         public static readonly SforceLoginPort = "sforce_login_port";
         public static readonly SforceLogoutPort = "sforce_logout_port";
+    }
+
+    export class ChromeCookieCauseKeys {
+        public static readonly Overwrite = "overwrite";
+        public static readonly Explicit = "explicit";
+        public static readonly ExpiredOverwrite = "expired_overwrite";
     }
 
     export class SforceErrorCodes {

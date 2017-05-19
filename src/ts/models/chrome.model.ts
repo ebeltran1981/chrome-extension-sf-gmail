@@ -3,11 +3,13 @@ Copyright AtlanticBT.
 */
 
 namespace AtlanticBTApp {
-    export class ChromeMessageRequest {
+    export class ChromeMessageRequest<T> {
         public key: string;
+        public data: T;
 
-        constructor(key: string) {
+        constructor(key: string, data?: T) {
             this.key = key;
+            this.data = data;
         }
     }
 

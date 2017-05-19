@@ -57,7 +57,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                test: /fonts\/(.+)\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 use: [
                     {
                         loader: "file-loader",
@@ -87,7 +87,7 @@ module.exports = {
                 use: "ts-loader"
             },
             {
-                test: /\.(gif|png|jpe?g)$/i,
+                test: /images\/(.+)\.(gif|png|jpe?g|svg)$/i,
                 loaders: [
                     {
                         loader: "file-loader",

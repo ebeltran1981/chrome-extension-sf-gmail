@@ -14,7 +14,8 @@
     "gmail-js": "0.6.10",
     "jquery": "3.2.1",
     "jsforce": "1.8.0",
-    "lodash": "4.17.4"
+    "lodash": "4.17.4",
+    "uuid": "3.0.1"
   },
   "devDependencies": {
     "@types/chrome": "0.0.46",
@@ -22,6 +23,7 @@
     "@types/lodash": "4.14.50",
     "@types/webpack": "2.2.15",
     "@types/node": "7.0.18",
+    "@types/uuid": "2.0.29",
     "clean-webpack-plugin": "0.1.16",
     "concurrently": "3.4.0",
     "css-loader": "0.28.1",
