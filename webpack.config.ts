@@ -23,7 +23,8 @@ const jsUglify = new webpack.optimize.UglifyJsPlugin();
 
 module.exports = {
     entry: {
-        main: "./src/ts/index.ts"
+        main: "./src/ts/index.ts",
+        background: "./src/ts/background.ts"
     },
     output: {
         filename: "js/[name].js",

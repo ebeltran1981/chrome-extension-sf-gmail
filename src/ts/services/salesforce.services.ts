@@ -5,110 +5,62 @@ Copyright AtlanticBT.
 import * as jsforce from "jsforce";
 import * as _ from "lodash";
 
-import { ChromeStorageModel, SforceErrorModel, SforceUserModel } from "../models/auth.model";
-import { ChromeStorageKeys, SforceErrorCodes } from "../tools/constants";
+import { ChromeMessageRequest, ChromeMessageResponse } from "../models/chrome.model";
+import { SforceErrorModel, SforceUserModel } from "../models/sforce.model";
+import { ChromeConnectKeys, ChromeMessageKeys, ChromeStorageKeys, SforceErrorCodes, SforceKeys, SforceValues } from "../tools/constants";
 
 namespace AtlanticBTApp {
-    class SforceAuthModel {
-        public access_token: string;
-        public instance_url: string;
-        public id: string;
-        public issued_at: Date;
-        public signature: string;
-        public state: string;
-        public scope: string;
-        public token_type: string;
-    }
-
-    abstract class SforceAuth {
-        protected _currentUser: SforceUserModel = null;
-        protected _ck: string = "3MVG9i1HRpGLXp.qijeggn1OC__TFqN3KFcMkAkPDAVJEfnfNn9VynFLunBuDnrory4en_kK_hfu861CgL2VZ";
-        protected _redirectUri: string = "https://mail.google.com/mail/u/0";
-        protected _instanceUrl: string = "https://na40.salesforce.com";
-    }
-
-    export class SforceServices extends SforceAuth {
+    export class SforceServices {
         private _conn: any;
+        private _currentUser: SforceUserModel;
 
-        constructor() {
-            super();
-        }
-
-        /**
-         * initialize jsforce
-         */
         public initialize() {
-            let sforceAuth = this.hashParser(location.hash);
-            chrome.storage.sync.get(ChromeStorageKeys.Session, (items) => {
-                if (sforceAuth !== null) {
-                    this.session = sforceAuth;
-                } else if (items[ChromeStorageKeys.Session]) {
-                    sforceAuth = items[ChromeStorageKeys.Session] as SforceAuthModel;
-                    this.session = sforceAuth;
-                } else {
-                    this.login();
-                }
+            const message = new ChromeMessageRequest(ChromeMessageKeys.SforceSessionCookie);
+            const loginPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLoginPort });
+            loginPort.postMessage(message);
+            loginPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.Cookie>) => {
+                this.connection = msg.data ? msg.data.value : null;
+            });
+
+            const logoutPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLogoutPort });
+            logoutPort.postMessage(null);
+            logoutPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.CookieChangeInfo>) => {
+                this.logout();
             });
         }
 
-        private login(): void {
-            jsforce.browser.login({
-                clientId: this._ck,
-                redirectUri: this._redirectUri
-            });
+        public get connection() {
+            return this._conn;
         }
 
-        private set session(sforceAuth: SforceAuthModel) {
+        public set connection(value: string) {
             debugger;
             this._conn = new jsforce.Connection({
                 oauth2: {
-                    clientId: this._ck,
-                    redirectUri: this._redirectUri
+                    clientId: SforceValues.OAuthId,
+                    redirectUri: SforceValues.RedirectUrl
                 },
-                instanceUrl: this._instanceUrl,
-                accessToken: sforceAuth.access_token
+                instanceUrl: SforceValues.InstanceUrl,
+                accessToken: value
             });
 
             this._conn.identity({}).then((user: SforceUserModel) => {
-                debugger;
                 this._currentUser = user;
             }, (error: SforceErrorModel) => {
                 debugger;
                 switch (error.errorCode) {
                     case SforceErrorCodes.InvalidSession:
-                        this.login();
+                        alert("Salesforce session expired or is invalid. Please login to Salesforce.");
                         break;
                     default:
-                        alert(error.toString());
+                        console.error(error.toString());
                         break;
-                }
-            });
-
-            chrome.storage.sync.set({ sforce_session: sforceAuth }, () => {
-                if (chrome.runtime.lastError !== undefined) {
-                    alert("Salesforce session was not saved properly.");
                 }
             });
         }
 
-        private hashParser(hash: string): SforceAuthModel {
-            if (_.isEmpty(hash) || hash.indexOf("salesforce.com") < 0) {
-                return null;
-            }
-
-            if (hash[0] == "#") {
-                hash = hash.slice(1, hash.length);
-            }
-
-            const sforceModel = new SforceAuthModel();
-
-            const hashSplit = hash.split("&");
-            _.forEach(hashSplit, (hashItem: string) => {
-                const ampSplit = hashItem.split("=");
-                sforceModel[ampSplit[0]] = decodeURIComponent(ampSplit[1]);
-            });
-
-            return sforceModel;
+        public logout() {
+            debugger;
         }
     }
 }

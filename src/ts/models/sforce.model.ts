@@ -3,10 +3,6 @@ Copyright AtlanticBT.
 */
 
 namespace AtlanticBTApp {
-    export class ChromeStorageModel {
-        public Key: string;
-        public Value: any;
-    }
     export class SforcePhotoModel {
         public picture: string;
         public thumbnail: string;
@@ -38,6 +34,7 @@ namespace AtlanticBTApp {
 
 export = AtlanticBTApp;
 
+// TODO: This is for test purposes. When done, delete this.
 const demoUserObject = {
     id: "https://login.salesforce.com/id/00D46000000oa0LEAQ/00546000000ZIS8AAO",
     asserted_user: true,
