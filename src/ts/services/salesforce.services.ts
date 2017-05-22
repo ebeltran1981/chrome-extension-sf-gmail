@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import { ChromeMessageRequest, ChromeMessageResponse } from "../models/chrome.model";
 import { ISforceUserModel, SforceErrorModel, SforceUserModel } from "../models/sforce.model";
 import { ChromeConnectKeys, ChromeMessageKeys, ChromeStorageKeys, SforceErrorCodes, SforceKeys, SforceValues } from "../tools/constants";
+import { ExtensionHelper } from "../tools/helpers";
 
 let notification: chrome.notifications.NotificationOptions;
 
@@ -15,16 +16,20 @@ namespace AtlanticBTApp {
     export class SforceServices {
         private _conn: any;
         private _currentUser: SforceUserModel;
+        private _extensionHelper: ExtensionHelper;
 
-        constructor() {
+        constructor(extensionHelper: ExtensionHelper) {
+            this._extensionHelper = extensionHelper;
+
             const message = new ChromeMessageRequest(ChromeMessageKeys.SforceSessionCookie);
-            const loginPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLoginPort });
+
+            const loginPort = chrome.runtime.connect(extensionHelper.extensionId, { name: ChromeConnectKeys.SforceLoginPort });
             loginPort.postMessage(message);
             loginPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.Cookie>) => {
                 this.setConnection(msg.data ? msg.data.value : null);
             });
 
-            const logoutPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLogoutPort });
+            const logoutPort = chrome.runtime.connect(extensionHelper.extensionId, { name: ChromeConnectKeys.SforceLogoutPort });
             logoutPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.CookieChangeInfo>) => {
                 this.logout();
             });

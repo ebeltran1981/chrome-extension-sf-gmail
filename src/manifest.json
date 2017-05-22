@@ -27,7 +27,8 @@
         "fonts/fontawesome-webfont.svg",
         "fonts/fontawesome-webfont.ttf",
         "fonts/fontawesome-webfont.woff",
-        "fonts/fontawesome-webfont.woff2"
+        "fonts/fontawesome-webfont.woff2",
+        "js/main.js"
     ],
     "author": "Edwin Beltran",
     "background": {
@@ -50,10 +51,10 @@
             "https://inbox.google.com/*"
         ],
         "css": [
-            "css/main.css"
+            "css/content.css"
         ],
         "js": [
-            "js/main.js"
+            "js/content.js"
         ]
     }]
 }

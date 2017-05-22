@@ -12,21 +12,19 @@ namespace AtlanticBTApp {
      * @description meant for plugin information
      */
     export class ExtensionHelper {
+        public extensionId: string;
+
         private _gmail: Gmail;
-
         private _version: string;
-        private _pluginId: string;
         private _extensionPath: string;
-
         private _userEmail: string;
 
         constructor(gmail: Gmail) {
+            this.extensionId = chrome.runtime.id;
+
             this._gmail = gmail;
-
             this._version = chrome.runtime.getManifest().version;
-            this._pluginId = chrome.runtime.id;
             this._extensionPath = chrome.extension.getURL("/");
-
             this._userEmail = this._gmail.get.user_email();
         }
     }
@@ -39,7 +37,7 @@ namespace AtlanticBTApp {
         private _sforce: SforceServices;
         private _composeEl: ComposeElements;
 
-        constructor(gmail: Gmail, sforce: SforceServices) {
+        constructor(gmail: Gmail, extensionHelper: ExtensionHelper, sforce: SforceServices) {
             this._gmail = gmail;
             this._sforce = sforce;
             this._composeEl = new ComposeElements();
