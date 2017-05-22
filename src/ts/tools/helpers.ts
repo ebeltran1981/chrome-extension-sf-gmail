@@ -47,7 +47,7 @@ namespace AtlanticBTApp {
 
         public initialize(): void {
             this._gmail.observe.on("compose", this.composeEmail.bind(this));
-            this._gmail.observe.before("send_message", this.sentEmail.bind(this));
+            this._gmail.observe.after("send_message", this.sentEmail.bind(this));
             // this._gmail.observe.after("send_message", this.sentEmail.bind(this));
         }
 
@@ -64,6 +64,10 @@ namespace AtlanticBTApp {
                 // Bcc Salesforce
                 const chk = composeEl.checkbox("Bcc Salesforce", "checkbox", false);
                 toolbar.append(chk);
+
+                form.on("submit", (e) => {
+                    debugger;
+                });
             });
         }
 
