@@ -14,15 +14,14 @@
         "128": "images/favicon_black128.png"
     },
 
-    "page_action": {
+    "browser_action": {
         "default_icon": {
             "16": "images/favicon_black16.png",
             "24": "images/favicon_black24.png",
-            "32": "images/favicon_black32.png",
-            "80": "images/favicon_black80.png"
-        },
-        "default_title": "AtlanticBT Gmail Extensions"
+            "32": "images/favicon_black32.png"
+        }
     },
+
     "web_accessible_resources": [
         "fonts/fontawesome-webfont.eot",
         "fonts/fontawesome-webfont.svg",
@@ -34,7 +33,8 @@
     "background": {
         "scripts": [
             "js/background.js"
-        ]
+        ],
+        "persistent": false
     },
     "permissions": [
         "cookies",

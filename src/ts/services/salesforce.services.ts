@@ -6,7 +6,7 @@ import * as jsforce from "jsforce";
 import * as _ from "lodash";
 
 import { ChromeMessageRequest, ChromeMessageResponse } from "../models/chrome.model";
-import { SforceErrorModel, SforceUserModel } from "../models/sforce.model";
+import { ISforceUserModel, SforceErrorModel, SforceUserModel } from "../models/sforce.model";
 import { ChromeConnectKeys, ChromeMessageKeys, ChromeStorageKeys, SforceErrorCodes, SforceKeys, SforceValues } from "../tools/constants";
 
 let notification: chrome.notifications.NotificationOptions;
@@ -16,12 +16,12 @@ namespace AtlanticBTApp {
         private _conn: any;
         private _currentUser: SforceUserModel;
 
-        public initialize() {
+        constructor() {
             const message = new ChromeMessageRequest(ChromeMessageKeys.SforceSessionCookie);
             const loginPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLoginPort });
             loginPort.postMessage(message);
             loginPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.Cookie>) => {
-                this.connection = msg.data ? msg.data.value : null;
+                this.setConnection(msg.data ? msg.data.value : null);
             });
 
             const logoutPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLogoutPort });
@@ -34,7 +34,25 @@ namespace AtlanticBTApp {
             return this._conn;
         }
 
-        public set connection(value: string) {
+        public logout() {
+            this._currentUser = null;
+            this._conn.logout();
+
+            let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
+            notification = {
+                type: "basic",
+                title: "LOGOUT",
+                message: "You're not logged in Salesforce!"
+            };
+            message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+            chrome.runtime.sendMessage(message);
+        }
+
+        public isLoggedIn() {
+            return !_.isEmpty(this._currentUser);
+        }
+
+        private setConnection(value: string) {
             this._conn = new jsforce.Connection({
                 oauth2: {
                     clientId: SforceValues.OAuthId,
@@ -45,11 +63,13 @@ namespace AtlanticBTApp {
             });
 
             let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
-            this._conn.identity().then((user: SforceUserModel) => {
+            this._conn.identity().then((u: ISforceUserModel) => {
+                this._currentUser = new SforceUserModel(u);
+
                 notification = {
                     type: "basic",
                     title: "LOGIN",
-                    message: `${user.first_name} you're logged in Salesforce!`
+                    message: `${this._currentUser.availableName}, you're logged in Salesforce!`
                 };
                 message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
                 chrome.runtime.sendMessage(message);
@@ -74,19 +94,8 @@ namespace AtlanticBTApp {
                         chrome.runtime.sendMessage(message);
                         break;
                 }
+                this._currentUser = null;
             });
-        }
-
-        public logout() {
-            // TODO: implement removal of controls when user is logged out.
-            let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
-            notification = {
-                type: "basic",
-                title: "LOGOUT",
-                message: "You're not logged in Salesforce!"
-            };
-            message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
-            chrome.runtime.sendMessage(message);
         }
     }
 }

@@ -8,6 +8,9 @@ import { SforceServices } from "../services/salesforce.services";
 import { ComposeElements } from "./elements";
 
 namespace AtlanticBTApp {
+    /**
+     * @description meant for plugin information
+     */
     export class ExtensionHelper {
         private _gmail: Gmail;
 
@@ -28,6 +31,9 @@ namespace AtlanticBTApp {
         }
     }
 
+    /**
+     * @description meant for gmail and salesforce events interactions
+     */
     export class EventsHelper {
         private _gmail: Gmail;
         private _sforce: SforceServices;
@@ -40,12 +46,12 @@ namespace AtlanticBTApp {
         }
 
         public initialize(): void {
-            // Gmail inits
             this._gmail.observe.on("compose", this.composeEmail.bind(this));
+            this._gmail.observe.before("send_message", this.sentEmail.bind(this));
+            // this._gmail.observe.after("send_message", this.sentEmail.bind(this));
         }
 
         private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
-            debugger;
             const gmail = this._gmail;
             const composeEl = this._composeEl;
             const temp = this._sforce.connection;
@@ -59,6 +65,10 @@ namespace AtlanticBTApp {
                 const chk = composeEl.checkbox("Bcc Salesforce", "checkbox", false);
                 toolbar.append(chk);
             });
+        }
+
+        private sentEmail(url, body, data, xhr) {
+            debugger;
         }
     }
 }

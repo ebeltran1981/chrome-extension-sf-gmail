@@ -18,9 +18,6 @@ namespace AtlanticBTApp {
     const sforceService = new SforceServices();
     const eventsHelper = new EventsHelper(gmail, sforceService);
 
-    // initialize salesforce
-    sforceService.initialize();
-
     // register main event will tell when Gmail is ready
     gmail.observe.on("load", eventsHelper.initialize.bind(eventsHelper));
 }
