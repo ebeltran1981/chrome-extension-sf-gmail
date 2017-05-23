@@ -24,7 +24,6 @@ const jsUglify = new webpack.optimize.UglifyJsPlugin();
 module.exports = {
     entry: {
         main: "./src/ts/main.ts",
-        content: "./src/ts/content.ts",
         background: "./src/ts/background.ts"
     },
     output: {
