@@ -6,7 +6,7 @@ It also uses the [jsforce](https://jsforce.github.com) library to perform CRUD a
 Due to a change in behavior from the last Salesforce deployment up to the time of this writing, I had to fork the library and make a change to disable **jsonp.** See [GitHub fork](https://github.com/ebeltran1981/jsforce) specifically the branch **disable-jsonp** and the [issue #611](https://github.com/jsforce/jsforce/issues/611).
 
 ## Before running this project
-You must clone the [jsforce GitHub fork](https://github.com/ebeltran1981/jsforce) locally and use **npm link** to create a local symlink to your local repo instead the npm one. See [this post](http://stackoverflow.com/questions/8088795/installing-a-local-module-using-npm) for more details.
+You must clone the [jsforce GitHub fork](https://github.com/ebeltran1981/jsforce) locally, switch to the `disable-jsonp` branch and use **npm link** to create a local symlink to your local repo instead the npm one. See [this post](http://stackoverflow.com/questions/8088795/installing-a-local-module-using-npm) for more details.
 
 This project is built using TypeScript and Webpack.
 
