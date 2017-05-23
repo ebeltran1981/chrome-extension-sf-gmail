@@ -2,13 +2,8 @@
 Copyright AtlanticBT.
  */
 
-import "font-awesome-sass-loader!./config/font-awesome.config";
-import "../manifest.json";
-import "../scss/main.scss";
-
 import * as $ from "jquery";
 
-import "font-awesome-sass-loader!./config/font-awesome.config";
 import "gmail-js";
 
 import { SforceServices } from "./services/salesforce.services";
@@ -23,6 +18,25 @@ namespace AtlanticBTApp {
 
     // register main event will tell when Gmail is ready
     gmail.observe.on("load", eventsHelper.initialize.bind(eventsHelper));
+
+    // let gmail;
+
+    // function refresh(f) {
+    //     if ((/in/.test(document.readyState)) || (typeof Gmail === "undefined")) {
+    //         setTimeout(refresh.bind(this, f), 10);
+    //     } else {
+    //         f();
+    //     }
+    // }
+
+    // const main = () => {
+    //     // NOTE: Always use the latest version of gmail.js from
+    //     // https://github.com/KartikTalwar/gmail.js
+    //     gmail = new Gmail($);
+    //     console.log("Hello, from abt extension: ", gmail.get.user_email());
+    // };
+
+    // refresh(main);
 }
 
 export = AtlanticBTApp;

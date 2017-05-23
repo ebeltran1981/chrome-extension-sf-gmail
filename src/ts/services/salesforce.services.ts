@@ -23,13 +23,13 @@ namespace AtlanticBTApp {
 
             const message = new ChromeMessageRequest(ChromeMessageKeys.SforceSessionCookie);
 
-            const loginPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLoginPort });
+            const loginPort = chrome.runtime.connect("gbajakhniioiefjggbcojmibedeaelbh", { name: ChromeConnectKeys.SforceLoginPort });
             loginPort.postMessage(message);
             loginPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.Cookie>) => {
                 this.setConnection(msg.data ? msg.data.value : null);
             });
 
-            const logoutPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLogoutPort });
+            const logoutPort = chrome.runtime.connect("gbajakhniioiefjggbcojmibedeaelbh", { name: ChromeConnectKeys.SforceLogoutPort });
             logoutPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.CookieChangeInfo>) => {
                 this.logout();
             });

@@ -27,8 +27,21 @@
         "fonts/fontawesome-webfont.svg",
         "fonts/fontawesome-webfont.ttf",
         "fonts/fontawesome-webfont.woff",
-        "fonts/fontawesome-webfont.woff2"
+        "fonts/fontawesome-webfont.woff2",
+        "js/main.js"
     ],
+    "externally_connectable": {
+        "ids": [
+            "*"
+        ],
+        "matches": [
+            "https://mail.google.com/*",
+            "https://inbox.google.com/*",
+            "https://*.salesforce.com/",
+            "https://*.force.com/"
+        ]
+    },
+
     "author": "Edwin Beltran",
     "background": {
         "scripts": [
@@ -50,10 +63,10 @@
             "https://inbox.google.com/*"
         ],
         "css": [
-            "css/main.css"
+            "css/content.css"
         ],
         "js": [
-            "js/main.js"
+            "js/content.js"
         ]
     }]
 }
