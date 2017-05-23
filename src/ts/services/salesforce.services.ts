@@ -17,19 +17,21 @@ namespace AtlanticBTApp {
         private _conn: any;
         private _currentUser: SforceUserModel;
         private _extensionHelper: ExtensionHelper;
+        private _extensionId: string;
 
         constructor(extensionHelper: ExtensionHelper) {
             this._extensionHelper = extensionHelper;
+            this._extensionId = "gbajakhniioiefjggbcojmibedeaelbh";
 
             const message = new ChromeMessageRequest(ChromeMessageKeys.SforceSessionCookie);
 
-            const loginPort = chrome.runtime.connect("gbajakhniioiefjggbcojmibedeaelbh", { name: ChromeConnectKeys.SforceLoginPort });
+            const loginPort = chrome.runtime.connect(this._extensionId, { name: ChromeConnectKeys.SforceLoginPort });
             loginPort.postMessage(message);
             loginPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.Cookie>) => {
                 this.setConnection(msg.data ? msg.data.value : null);
             });
 
-            const logoutPort = chrome.runtime.connect("gbajakhniioiefjggbcojmibedeaelbh", { name: ChromeConnectKeys.SforceLogoutPort });
+            const logoutPort = chrome.runtime.connect(this._extensionId, { name: ChromeConnectKeys.SforceLogoutPort });
             logoutPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.CookieChangeInfo>) => {
                 this.logout();
             });
@@ -77,7 +79,7 @@ namespace AtlanticBTApp {
                     message: `${this._currentUser.availableName}, you're logged in Salesforce!`
                 };
                 message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
-                chrome.runtime.sendMessage(message);
+                chrome.runtime.sendMessage(this._extensionId, message);
             }, (error: SforceErrorModel) => {
                 switch (error.errorCode) {
                     case SforceErrorCodes.InvalidSession:
@@ -87,7 +89,7 @@ namespace AtlanticBTApp {
                             message: "Salesforce session expired or is invalid. Please login to Salesforce."
                         };
                         message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
-                        chrome.runtime.sendMessage(message);
+                        chrome.runtime.sendMessage(this._extensionId, message);
                         break;
                     default:
                         notification = {
@@ -96,7 +98,7 @@ namespace AtlanticBTApp {
                             message: error.message
                         };
                         message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
-                        chrome.runtime.sendMessage(message);
+                        chrome.runtime.sendMessage(this._extensionId, message);
                         break;
                 }
                 this._currentUser = null;

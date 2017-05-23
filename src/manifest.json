@@ -32,13 +32,11 @@
     ],
     "externally_connectable": {
         "ids": [
-            "*"
+            "gbajakhniioiefjggbcojmibedeaelbh"
         ],
         "matches": [
             "https://mail.google.com/*",
-            "https://inbox.google.com/*",
-            "https://*.salesforce.com/",
-            "https://*.force.com/"
+            "https://inbox.google.com/*"
         ]
     },
 

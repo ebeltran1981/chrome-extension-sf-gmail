@@ -72,7 +72,7 @@
         "file-header": [true,
             "Copyright AtlanticBT."
         ],
-        "max-line-length": [true, 140],
+        "max-line-length": [true, 240],
         "member-ordering": [true,
             "public-before-private",
             "static-before-instance",

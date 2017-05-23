@@ -10,6 +10,7 @@ namespace AtlanticBTApp {
     export class ChromeMessageKeys {
         public static readonly SforceSessionCookie = "sforce_session_cookie";
         public static readonly CreateNotification = "create_notification";
+        public static readonly IsSforceLoggedIn = "is_sforce_logged_in";
     }
 
     export class ChromeConnectKeys {
