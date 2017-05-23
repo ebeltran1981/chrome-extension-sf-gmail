@@ -37,7 +37,27 @@ namespace AtlanticBTApp {
 
         public initialize(): void {
             this._gmail.observe.on("compose", this.composeEmail.bind(this));
-            this._gmail.observe.after("send_message", this.sentEmail.bind(this));
+            // this._gmail.observe.after("send_message", this.sentEmail.bind(this));
+            this._gmail.observe.before("send_message", (url, body, data, xhr) => {
+                console.warn(`SEND_MESSAGE WAS CALLED`);
+                const body_params = xhr.xhrParams.body_params;
+
+                // lets cc this email to someone extra if the subject is 'Fake example'
+                if (data.subject == "Fake example") {
+                    if (body_params.cc) {
+                        if (typeof body_params.cc != "object") {
+                            body_params.cc = [body_params.cc];
+                        }
+                    } else {
+                        body_params.cc = [];
+                    }
+                    body_params.cc.push("ebeltran1981@gmail.com");
+                }
+
+                // now change the subject
+                body_params.subject = "Subject overwritten!";
+                console.log("sending message, url:", url, "body", body, "email_data", data, "xhr", xhr);
+            });
             // this._gmail.observe.after("send_message", this.sentEmail.bind(this));
         }
 
