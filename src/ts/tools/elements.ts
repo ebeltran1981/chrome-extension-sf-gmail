@@ -21,13 +21,22 @@ namespace AtlanticBTApp {
             return item.find(`.${cssClasses.abtToolbar}`).length > 0;
         }
 
-        public checkbox(text: string, css: string, inverse: boolean = false): JQuery {
+        /**
+         * this is a wrapper to generate a checkbox inside a div within a label control.
+         * @param name The name for the control, also is used for the id.
+         * @param text The text to show on the label
+         * @param css the class to add to the checkbox
+         * @param inverse flag if you want to show the label to right or the left
+         */
+        public checkbox(name: string, text: string, css: string, inverse: boolean = false): JQuery {
             const div = $(document.createElement("div"));
             const lbl = $(document.createElement("label"));
             const chk = $(document.createElement("input"));
 
             div.addClass(`aoT ${css}`);
             lbl.text(text);
+            chk.attr("id", name);
+            chk.attr("name", name);
             chk.attr("type", "checkbox");
 
             if (inverse) {

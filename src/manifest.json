@@ -28,7 +28,7 @@
         "fonts/fontawesome-webfont.ttf",
         "fonts/fontawesome-webfont.woff",
         "fonts/fontawesome-webfont.woff2",
-        "js/main.js"
+        "js/webPage.js"
     ],
     "externally_connectable": {
         "ids": [
@@ -43,7 +43,7 @@
     "author": "Edwin Beltran",
     "background": {
         "scripts": [
-            "js/background.js"
+            "js/backgroundEvents.js"
         ],
         "persistent": false
     },
@@ -61,10 +61,10 @@
             "https://inbox.google.com/*"
         ],
         "css": [
-            "css/content.css"
+            "css/contentScripts.css"
         ],
         "js": [
-            "js/content.js"
+            "js/contentScripts.js"
         ]
     }]
 }

@@ -3,19 +3,14 @@ Copyright AtlanticBT.
 */
 
 namespace AtlanticBTApp {
-    export class ChromeStorageKeys {
-        public static readonly Session = "sforce_session";
+    export class WindowEventKeys {
+        public static readonly SforceLogin: string = "sforce_login";
+        public static readonly SforceLogout: string = "Sforce_logout";
     }
 
     export class ChromeMessageKeys {
-        public static readonly SforceSessionCookie = "sforce_session_cookie";
         public static readonly CreateNotification = "create_notification";
-        public static readonly IsSforceLoggedIn = "is_sforce_logged_in";
-    }
-
-    export class ChromeConnectKeys {
-        public static readonly SforceLoginPort = "sforce_login_port";
-        public static readonly SforceLogoutPort = "sforce_logout_port";
+        public static readonly LoadSforce = "load_sforce";
     }
 
     export class ChromeCookieCauseKeys {
@@ -30,6 +25,10 @@ namespace AtlanticBTApp {
 
     export class SforceKeys {
         public static readonly SessionCookie: string = "sid";
+    }
+
+    export class ChromeExtensionValues {
+        public static readonly ExtensionId: string = "gbajakhniioiefjggbcojmibedeaelbh";
     }
 
     export class SforceValues {
