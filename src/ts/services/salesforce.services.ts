@@ -35,6 +35,10 @@ namespace AtlanticBTApp {
             });
         }
 
+        public get currentUser() {
+            return this._currentUser;
+        }
+
         public get connection() {
             return this._conn;
         }

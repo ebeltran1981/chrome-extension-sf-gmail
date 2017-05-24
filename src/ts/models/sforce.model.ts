@@ -7,6 +7,15 @@ namespace AtlanticBTApp {
         public picture: string;
         public thumbnail: string;
     }
+
+    interface ISforceBaseModel {
+        Id: string;
+    }
+
+    export interface ISforceContactModel extends ISforceBaseModel {
+        AccountId: string;
+    }
+
     export interface ISforceUserModel {
         id: string;
         asserted_user: boolean;
