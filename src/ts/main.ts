@@ -14,6 +14,8 @@ import "gmail-js";
 import { SforceServices } from "./services/salesforce.services";
 import { EventsHelper, ExtensionHelper } from "./tools/helpers";
 
+import "./observers/dom.observers";
+
 namespace AtlanticBTApp {
     const gmail = new Gmail($);
 

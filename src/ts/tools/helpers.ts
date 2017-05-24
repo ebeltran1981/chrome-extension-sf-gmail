@@ -55,7 +55,10 @@ namespace AtlanticBTApp {
                 const chk = composeEl.checkbox("Bcc Salesforce", "checkbox", false);
                 toolbar.append(chk);
 
-                form.on("submit", (e) => {
+                debugger;
+
+                const sendBtn = form.find(".n1tfz .T-I.J-J5-Ji.aoO.T-I-atl.L3");
+                sendBtn.on("click", (e) => {
                     debugger;
                 });
             });
