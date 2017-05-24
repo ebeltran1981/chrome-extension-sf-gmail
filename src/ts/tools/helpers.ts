@@ -3,6 +3,7 @@ Copyright AtlanticBT.
  */
 
 import * as $ from "jquery";
+import * as _ from "lodash";
 
 import { SforceServices } from "../services/salesforce.services";
 import { ComposeElements } from "./elements";
@@ -55,11 +56,23 @@ namespace AtlanticBTApp {
                 const chk = composeEl.checkbox("Bcc Salesforce", "checkbox", false);
                 toolbar.append(chk);
 
-                debugger;
-
-                const sendBtn = form.find(".n1tfz .T-I.J-J5-Ji.aoO.T-I-atl.L3");
+                const sendBtn = item.dom("send_button");
                 sendBtn.on("click", (e) => {
-                    debugger;
+                    const bccSalesforce = chk.find("input[type=checkbox]").is(":checked");
+                    if (bccSalesforce) {
+                        const $toList: JQuery = item.to() as any;
+                        const toList: string[] = [];
+                        $.each($toList.siblings("div.vR").children("span.vN.vP"), (elIdx, elem) => {
+                            _.forEach(elem.attributes, (attr) => {
+                                if (attr.nodeName === "email") {
+                                    toList.push(attr.nodeValue);
+                                }
+                            });
+                        });
+
+                        const subject = item.subject();
+                        const body = item.body();
+                    }
                 });
             });
         }
