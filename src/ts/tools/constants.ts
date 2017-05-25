@@ -37,6 +37,9 @@ namespace AtlanticBTApp {
         public static readonly FullCookieDomain: string = "https://na40.salesforce.com";
         public static readonly OAuthId: string = "3MVG9i1HRpGLXp.qijeggn1OC__TFqN3KFcMkAkPDAVJEfnfNn9VynFLunBuDnrory4en_kK_hfu861CgL2VZ";
         public static readonly RedirectUrl: string = "https://mail.google.com/mail/u/0";
+        public static readonly SforceExtensionId: string = "jjghhkepijgakdammjldcbnjehfkfmha";
+        public static readonly SforceExtensionUrl: string = "https://chrome.google.com/webstore/detail/jjghhkepijgakdammjldcbnjehfkfmha";
+        public static readonly SforceExtensionName: string = "Salesforce Lightning for Gmail";
     }
 }
 
