@@ -99,14 +99,25 @@ namespace AtlanticBTApp {
                         bodyContainer.html(item.body());
                         bodyContainer.find(".gmail_signature").remove();
 
-                        let body = _.replace(bodyContainer.html(), "<br>", "\n");
-                        body = _.replace(body, "</p>", "</p>\n");
-                        body = _.replace(body, "</div>", "</div>\n");
+                        let body = _.replace(bodyContainer.html(), /<br>/gi, "\n\n");
+                        body = _.replace(body, /<br\/>/gi, "\n\n");
+                        body = _.replace(body, /<\/p>/gi, "</p>\n\n");
+                        body = _.replace(body, /<\/div>/gi, "</div>\n\n");
+                        body = _.replace(body, /<\/h1>/gi, "</h1>\n\n");
+                        body = _.replace(body, /<\/h2>/gi, "</h2>\n\n");
+                        body = _.replace(body, /<\/h3>/gi, "</h3>\n\n");
+                        body = _.replace(body, /<\/h4>/gi, "</h4>\n\n");
+                        body = _.replace(body, /<\/h5>/gi, "</h5>\n\n");
+                        body = _.replace(body, /<\/h6>/gi, "</h6>\n\n");
 
                         bodyContainer.html(body);
 
                         body = bodyContainer.text();
-                        body = _.replace(body, /\n/, "<br>");
+
+                        body = _.truncate(body, {
+                            length: 32000 - 58, // doubled the limit due to the omission text.
+                            omission: "[-----MESSAGE TRUNCATED-----]"
+                        });
 
                         const subject = item.subject();
 
