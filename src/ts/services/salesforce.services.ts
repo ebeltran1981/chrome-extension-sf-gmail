@@ -26,7 +26,7 @@ namespace AtlanticBTApp {
             const loginPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLoginPort });
             loginPort.postMessage(message);
             loginPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.Cookie>) => {
-                this.setConnection(msg.data ? msg.data.value : null);
+                this.setConnection(msg.data ? msg.data : {} as chrome.cookies.Cookie);
             });
 
             const logoutPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLogoutPort });
@@ -61,14 +61,14 @@ namespace AtlanticBTApp {
             return !_.isEmpty(this._currentUser);
         }
 
-        private setConnection(value: string) {
+        private setConnection(cookie: chrome.cookies.Cookie) {
             this._conn = new jsforce.Connection({
                 oauth2: {
                     clientId: SforceValues.OAuthId,
                     redirectUri: SforceValues.RedirectUrl
                 },
-                instanceUrl: SforceValues.InstanceUrl,
-                accessToken: value
+                instanceUrl: `https://${cookie.domain}`,
+                accessToken: cookie.value
             });
 
             let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;

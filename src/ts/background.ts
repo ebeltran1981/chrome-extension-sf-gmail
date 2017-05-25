@@ -15,18 +15,26 @@ chrome.runtime.onConnect.addListener((port) => {
         port.onMessage.addListener((msg: ChromeMessageRequest<{}>, p) => {
             // The login happened thru the initial loading of the browser
             if (msg.key === ChromeMessageKeys.SforceSessionCookie) {
-                chrome.cookies.get({ url: SforceValues.FullCookieDomain, name: SforceKeys.SessionCookie }, (cookie) => {
-                    const response = new ChromeMessageResponse(ChromeMessageResponseTypeEnum.loginLoading, cookie);
-                    if (isLoginPortOpen) {
-                        p.postMessage(response);
-                    }
+                const details: chrome.cookies.GetAllDetails = {
+                    name: SforceKeys.SessionCookie
+                };
+                chrome.cookies.getAll(details, (cookies) => {
+                    _.forEach(cookies, (cookie) => {
+                        if (SforceValues.CookieDomainRegEx.test(cookie.domain)) {
+                            const response = new ChromeMessageResponse(ChromeMessageResponseTypeEnum.loginLoading, cookie);
+                            if (isLoginPortOpen) {
+                                p.postMessage(response);
+                            }
+                            return;
+                        }
+                    });
                 });
             }
         });
 
         chrome.cookies.onChanged.addListener((changeInfo) => {
             if (!changeInfo.removed && changeInfo.cause === ChromeCookieCauseKeys.Explicit) {
-                if (changeInfo.cookie.name === SforceKeys.SessionCookie && changeInfo.cookie.domain === SforceValues.CookieDomain) {
+                if (changeInfo.cookie.name === SforceKeys.SessionCookie && SforceValues.CookieDomainRegEx.test(changeInfo.cookie.domain)) {
                     const response = new ChromeMessageResponse(ChromeMessageResponseTypeEnum.loginExtension, changeInfo.cookie);
                     if (isLoginPortOpen) {
                         port.postMessage(response);
@@ -46,7 +54,7 @@ chrome.runtime.onConnect.addListener((port) => {
         let isLogoutPortOpen = true;
         chrome.cookies.onChanged.addListener((changeInfo) => {
             if (changeInfo.removed && changeInfo.cause === ChromeCookieCauseKeys.ExpiredOverwrite) {
-                if (changeInfo.cookie.name === SforceKeys.SessionCookie && changeInfo.cookie.domain === SforceValues.CookieDomain) {
+                if (changeInfo.cookie.name === SforceKeys.SessionCookie && SforceValues.CookieDomainRegEx.test(changeInfo.cookie.domain)) {
                     const response = new ChromeMessageResponse(ChromeMessageResponseTypeEnum.logoutExtension, changeInfo.cookie);
                     if (isLogoutPortOpen) {
                         port.postMessage(response);
@@ -70,7 +78,7 @@ chrome.runtime.onMessage.addListener((message: ChromeMessageRequest<chrome.notif
 
 chrome.notifications.onButtonClicked.addListener((nId, bIdx) => {
     if (extNotInstalledNotificationId === nId) {
-        window.open(SforceValues.SforceExtensionUrl, "_blank");
+        window.open(SforceValues.ExtensionUrl, "_blank");
     }
 });
 
@@ -78,8 +86,7 @@ let extNotInstalledNotificationId: string = null;
 chrome.management.getAll((result) => {
     let found = false;
     _.forEach(result, (extension) => {
-        console.log(extension.name, extension.shortName, extension.id);
-        if (extension.id === SforceValues.SforceExtensionId && extension.enabled) {
+        if (extension.id === SforceValues.ExtensionId && extension.enabled) {
             found = true;
         }
     });
@@ -87,7 +94,7 @@ chrome.management.getAll((result) => {
         const notification = {
             type: "basic",
             title: "IMPORTANT",
-            message: `${SforceValues.SforceExtensionName} extension not found or is disabled! Go to the Chrome Store and install it before using AtlanticBT extension.`,
+            message: `${SforceValues.ExtensionName} extension not found or is disabled! Go to the Chrome Store and install it before using AtlanticBT extension.`,
             buttons: [
                 {
                     title: "Goto Extension Homepage"

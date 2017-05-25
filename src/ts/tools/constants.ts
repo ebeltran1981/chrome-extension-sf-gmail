@@ -32,14 +32,14 @@ namespace AtlanticBTApp {
     }
 
     export class SforceValues {
-        public static readonly InstanceUrl: string = "https://na40.salesforce.com";
-        public static readonly CookieDomain: string = "na40.salesforce.com";
-        public static readonly FullCookieDomain: string = "https://na40.salesforce.com";
-        public static readonly OAuthId: string = "3MVG9i1HRpGLXp.qijeggn1OC__TFqN3KFcMkAkPDAVJEfnfNn9VynFLunBuDnrory4en_kK_hfu861CgL2VZ";
+        // public static readonly OAuthId: string = "3MVG9i1HRpGLXp.qijeggn1OC__TFqN3KFcMkAkPDAVJEfnfNn9VynFLunBuDnrory4en_kK_hfu861CgL2VZ"; // Edwin ABT Developer Account
+        public static readonly OAuthId: string = "3MVG97wqanbUM37Jm2iv5h_W.ym43KVYOLEMc1D7PniR7XsxlEH3Uo2.ep0ByZHfUUuGqsZa.9sX7e47kEWvz"; // ABT Sandbox3
         public static readonly RedirectUrl: string = "https://mail.google.com/mail/u/0";
-        public static readonly SforceExtensionId: string = "jjghhkepijgakdammjldcbnjehfkfmha";
-        public static readonly SforceExtensionUrl: string = "https://chrome.google.com/webstore/detail/jjghhkepijgakdammjldcbnjehfkfmha";
-        public static readonly SforceExtensionName: string = "Salesforce Lightning for Gmail";
+        public static readonly ExtensionId: string = "jjghhkepijgakdammjldcbnjehfkfmha";
+        public static readonly ExtensionUrl: string = "https://chrome.google.com/webstore/detail/jjghhkepijgakdammjldcbnjehfkfmha";
+        public static readonly ExtensionName: string = "Salesforce Lightning for Gmail";
+        public static readonly CookieDomainRegEx: RegExp = /^[a-z0-9.-]*(\.salesforce\.com)(:\d+)?$/g;
+        public static readonly InstanceRegEx: RegExp = /^(http(s)):\/\/[a-z0-9.-]*(\.salesforce\.com)(:\d+)?$/g;
     }
 }
 
