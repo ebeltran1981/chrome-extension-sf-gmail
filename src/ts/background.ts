@@ -103,5 +103,4 @@ chrome.management.getAll((result) => {
         };
         extNotInstalledNotificationId = createNotification(notification);
     }
-});
-
+}); 
