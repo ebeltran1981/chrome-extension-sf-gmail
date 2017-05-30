@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "AtlanticBT Gmail and Salesforce Extension",
-    "version": "0.0.2",
+    "version": "0.0.3",
 
     "description": "Extension for AtlanticBT. This extension implements missing features needed by ABT from the 'Lightning for Gmail' plugin from Salesforce.",
 
@@ -40,6 +40,7 @@
         "cookies",
         "notifications",
         "management",
+        "storage",
         "https://mail.google.com/",
         "https://inbox.google.com/",
         "https://*.salesforce.com/",
