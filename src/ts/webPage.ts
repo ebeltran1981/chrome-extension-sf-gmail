@@ -5,7 +5,7 @@ Copyright AtlanticBT.
 import "gmail-js";
 import * as $ from "jquery";
 import "./listeners/webPage.listeners";
-import { ChromeMessageRequest } from "./models/chrome.model";
+import { ChromeMessage } from "./models/chrome.model";
 import { GmailServices } from "./services/gmail.services";
 import { ChromeExtensionValues, ChromeMessageKeys } from "./tools/constants";
 
@@ -19,7 +19,7 @@ namespace AtlanticBTApp {
     }
 
     function loadSforce() {
-        const message = new ChromeMessageRequest(ChromeMessageKeys.LoadSforce);
+        const message = new ChromeMessage(ChromeMessageKeys.LoadSforce);
         chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, message);
     }
 
