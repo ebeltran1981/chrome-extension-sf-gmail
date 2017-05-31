@@ -10,6 +10,8 @@ namespace AtlanticBTApp {
     export class ChromeMessageKeys {
         public static readonly SforceSessionCookie = "sforce_session_cookie";
         public static readonly CreateNotification = "create_notification";
+        public static readonly SetSforceConnection = "sforce_set_connection";
+        public static readonly ClearSforceConnection = "sforce_clear_connection";
     }
 
     export class ChromeConnectKeys {
@@ -38,8 +40,8 @@ namespace AtlanticBTApp {
         public static readonly ExtensionId: string = "jjghhkepijgakdammjldcbnjehfkfmha";
         public static readonly ExtensionUrl: string = "https://chrome.google.com/webstore/detail/jjghhkepijgakdammjldcbnjehfkfmha";
         public static readonly ExtensionName: string = "Salesforce Lightning for Gmail";
-        public static readonly CookieDomainRegEx: RegExp = /^[a-z0-9.-]*(\.salesforce\.com)(:\d+)?$/g;
-        public static readonly InstanceRegEx: RegExp = /^(http(s)):\/\/[a-z0-9.-]*(\.salesforce\.com)(:\d+)?$/g;
+        public static readonly CookieDomainRegEx: RegExp = /^((?=\w*[a-z])(?=\w*[0-9])\w+)(\.salesforce\.com)(:\d+)?$/g;
+        public static readonly InstanceRegEx: RegExp = /^(https):\/\/((?=\w*[a-z])(?=\w*[0-9])\w+)(\.salesforce\.com)(:\d+)?$/g;
     }
 }
 

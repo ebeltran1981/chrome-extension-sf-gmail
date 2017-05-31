@@ -5,7 +5,7 @@ Copyright AtlanticBT.
 import * as $ from "jquery";
 import * as _ from "lodash";
 
-import { ChromeMessageRequest } from "../models/chrome.model";
+import { ChromeMessage } from "../models/chrome.model";
 import { ISforceContactModel } from "../models/sforce.model";
 import { SforceServices } from "../services/salesforce.services";
 import { ChromeMessageKeys } from "./constants";
@@ -72,7 +72,7 @@ namespace AtlanticBTApp {
                                     title: "WARNING",
                                     message: "You are not logged in Salesforce"
                                 };
-                                const message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+                                const message = new ChromeMessage(ChromeMessageKeys.CreateNotification, notification);
                                 chrome.runtime.sendMessage(message);
                             }
                         }

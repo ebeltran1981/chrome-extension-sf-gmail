@@ -5,7 +5,7 @@ Copyright AtlanticBT.
 import * as jsforce from "jsforce";
 import * as _ from "lodash";
 
-import { ChromeMessageRequest, ChromeMessageResponse } from "../models/chrome.model";
+import { ChromeMessage } from "../models/chrome.model";
 import { ISforceUserModel, SforceErrorModel, SforceUserModel } from "../models/sforce.model";
 import { ChromeConnectKeys, ChromeMessageKeys, ChromeStorageKeys, SforceErrorCodes, SforceKeys, SforceValues } from "../tools/constants";
 import { ExtensionHelper } from "../tools/helpers";
@@ -19,19 +19,28 @@ namespace AtlanticBTApp {
         private _extensionHelper: ExtensionHelper;
 
         constructor(extensionHelper: ExtensionHelper) {
+            let timeout: any;
+            const timeoutDelay: number = 1000;
+
             this._extensionHelper = extensionHelper;
 
-            const message = new ChromeMessageRequest(ChromeMessageKeys.SforceSessionCookie);
+            const loginMessage = new ChromeMessage(ChromeMessageKeys.SforceSessionCookie);
+            chrome.runtime.sendMessage(loginMessage);
 
-            const loginPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLoginPort });
-            loginPort.postMessage(message);
-            loginPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.Cookie>) => {
-                this.setConnection(msg.data ? msg.data : {} as chrome.cookies.Cookie);
-            });
-
-            const logoutPort = chrome.runtime.connect({ name: ChromeConnectKeys.SforceLogoutPort });
-            logoutPort.onMessage.addListener((msg: ChromeMessageResponse<chrome.cookies.CookieChangeInfo>) => {
-                this.logout();
+            chrome.runtime.onMessage.addListener((message: ChromeMessage<{}>, sender, sendResponse) => {
+                switch (message.key) {
+                    case ChromeMessageKeys.SforceSessionCookie:
+                        if (timeout) {
+                            clearTimeout(timeout);
+                        }
+                        timeout = setTimeout(() => {
+                            this.setConnection(message.data as chrome.cookies.Cookie);
+                        }, timeoutDelay);
+                        break;
+                    case ChromeMessageKeys.ClearSforceConnection:
+                        this.logout();
+                        break;
+                }
             });
         }
 
@@ -47,13 +56,13 @@ namespace AtlanticBTApp {
             this._currentUser = null;
             this._conn.logout();
 
-            let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
+            let message: ChromeMessage<chrome.notifications.NotificationOptions>;
             notification = {
                 type: "basic",
                 title: "LOGOUT",
                 message: "You're not logged in Salesforce!"
             };
-            message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+            message = new ChromeMessage(ChromeMessageKeys.CreateNotification, notification);
             chrome.runtime.sendMessage(message);
         }
 
@@ -71,7 +80,7 @@ namespace AtlanticBTApp {
                 accessToken: cookie.value
             });
 
-            let message: ChromeMessageRequest<chrome.notifications.NotificationOptions>;
+            let message: ChromeMessage<chrome.notifications.NotificationOptions>;
             this._conn.identity().then((u: ISforceUserModel) => {
                 this._currentUser = new SforceUserModel(u);
 
@@ -80,7 +89,7 @@ namespace AtlanticBTApp {
                     title: "LOGIN",
                     message: `${this._currentUser.availableName}, you're logged in Salesforce!`
                 };
-                message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+                message = new ChromeMessage(ChromeMessageKeys.CreateNotification, notification);
                 chrome.runtime.sendMessage(message);
             }, (error: SforceErrorModel) => {
                 switch (error.errorCode) {
@@ -90,7 +99,7 @@ namespace AtlanticBTApp {
                             title: "WARNING",
                             message: "Salesforce session expired or is invalid. Please login to Salesforce."
                         };
-                        message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+                        message = new ChromeMessage(ChromeMessageKeys.CreateNotification, notification);
                         chrome.runtime.sendMessage(message);
                         break;
                     default:
@@ -99,7 +108,7 @@ namespace AtlanticBTApp {
                             title: "ERROR",
                             message: error.message
                         };
-                        message = new ChromeMessageRequest(ChromeMessageKeys.CreateNotification, notification);
+                        message = new ChromeMessage(ChromeMessageKeys.CreateNotification, notification);
                         chrome.runtime.sendMessage(message);
                         break;
                 }

@@ -8,7 +8,6 @@ import "../scss/main.scss";
 
 import * as $ from "jquery";
 
-import "font-awesome-sass-loader!./config/font-awesome.config";
 import "gmail-js";
 
 import { SforceServices } from "./services/salesforce.services";
