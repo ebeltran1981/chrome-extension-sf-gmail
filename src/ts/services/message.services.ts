@@ -2,11 +2,11 @@
 Copyright AtlanticBT.
 */
 
-import { ChromeMessage } from "../models/chrome.model";
-import { ChromeMessageKeys, SforceKeys, SforceValues } from "../tools/constants";
-import { createNotification } from "../tools/notifications";
-
 import * as _ from "lodash";
+
+import { ChromeMessage } from "../models/chrome.model";
+import { ChromeMessageKeys, ChromeTabValues, SforceKeys, SforceValues } from "../tools/constants";
+import { createNotification } from "../tools/notifications";
 
 namespace AtlanticBTApp {
     chrome.runtime.onMessage.addListener((message: ChromeMessage<chrome.notifications.NotificationOptions>, sender, sendResponse) => {
@@ -41,9 +41,8 @@ namespace AtlanticBTApp {
         chrome.tabs.query({}, (tabs) => {
             if (tabs.length > 0) {
                 _.forEach(tabs, (tab) => {
-                    if (tab.active) {
+                    if (ChromeTabValues.GmailUrlRegEx.test(tab.url)) {
                         chrome.tabs.sendMessage(tab.id, message);
-                        return;
                     }
                 });
             }

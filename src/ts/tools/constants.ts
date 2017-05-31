@@ -29,6 +29,10 @@ namespace AtlanticBTApp {
         public static readonly InvalidSession: string = "INVALID_SESSION_ID";
     }
 
+    export class ChromeTabValues {
+        public static readonly GmailUrlRegEx: RegExp = /^(https):\/\/(inbox|mail)(\.google\.com)(:\d+)?/;
+    }
+
     export class SforceKeys {
         public static readonly SessionCookie: string = "sid";
     }
@@ -40,8 +44,8 @@ namespace AtlanticBTApp {
         public static readonly ExtensionId: string = "jjghhkepijgakdammjldcbnjehfkfmha";
         public static readonly ExtensionUrl: string = "https://chrome.google.com/webstore/detail/jjghhkepijgakdammjldcbnjehfkfmha";
         public static readonly ExtensionName: string = "Salesforce Lightning for Gmail";
-        public static readonly CookieDomainRegEx: RegExp = /^((?=\w*[a-z])(?=\w*[0-9])\w+)(\.salesforce\.com)(:\d+)?$/g;
-        public static readonly InstanceRegEx: RegExp = /^(https):\/\/((?=\w*[a-z])(?=\w*[0-9])\w+)(\.salesforce\.com)(:\d+)?$/g;
+        public static readonly CookieDomainRegEx: RegExp = /^((?=\w*[a-z])(?=\w*[0-9])\w+)(\.salesforce\.com)(:\d+)?$/;
+        public static readonly InstanceRegEx: RegExp = /^(https):\/\/((?=\w*[a-z])(?=\w*[0-9])\w+)(\.salesforce\.com)(:\d+)?$/;
     }
 }
 
