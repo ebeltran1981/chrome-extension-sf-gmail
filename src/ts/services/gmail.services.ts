@@ -2,49 +2,67 @@
 Copyright AtlanticBT.
 */
 
+import * as $ from "jquery";
+import * as _ from "lodash";
+
 import { ChromeMessage } from "../models/chrome.model";
+import { SforceGmailModel } from "../models/gmail.model";
+import { ISforceContactModel } from "../models/sforce.model";
 import { ChromeConnectKeys, ChromeExtensionValues, ChromeMessageKeys } from "../tools/constants";
 import { ComposeElements } from "../tools/elements";
 
 namespace AtlanticBTApp {
     export class GmailServices {
+        private currentUser: string;
         private composeEl: ComposeElements;
 
         constructor(private gmail: Gmail) {
+            this.currentUser = gmail.get.user_email();
             this.composeEl = new ComposeElements();
         }
 
         public initialize() {
-            const initMessage = new ChromeMessage<{}>(ChromeMessageKeys.LoadSforceFromInit, "WEBPAGE");
+            // try to initialize sforce connection
+            const initMessage = new ChromeMessage(ChromeMessageKeys.LoadSforceFromInit);
             chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, initMessage);
 
-            // const initPort = chrome.runtime.connect(ChromeExtensionValues.ExtensionId, { name: ChromeConnectKeys.LoginPort });
-            // initPort.postMessage(initMessage);
-            // initPort.onMessage.addListener((message, port) => {
-            //     console.log("MESSAGE FROM WEBPAGE: ", message, "PORT", port);
-            // });
-
+            // register gmail events
             this.gmail.observe.on("compose", this.composeEmail.bind(this));
             this.gmail.observe.after("send_message", this.sendEmail.bind(this));
         }
 
-        private composeEmail(GmailDomCompose: any, type: GmailComposeType): void {
+        private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
             const gmail = this.gmail;
             const composeEl = this.composeEl;
 
-            const composes = gmail.dom.composes();
-            $.each(composes, (idx: number, item: GmailDomCompose) => {
-                const form = item.$el.find("form");
-                const toolbar = composeEl.add_toolbar(form);
+            const form = compose.$el.find("form");
 
-                // Bcc Salesforce
-                const chk = composeEl.checkbox("bccSforce", "Bcc Salesforce", "checkbox", false);
-                toolbar.append(chk);
+            if (composeEl.hasToolbar(form)) {
+                return;
+            }
+
+            const toolbar = composeEl.add_toolbar(form);
+
+            // Bcc Salesforce
+            const chkDiv = composeEl.checkbox("bcc_salesforce", "Bcc Salesforce", "checkbox", false);
+            toolbar.append(chkDiv);
+            const chk = chkDiv.find("input[type=checkbox]");
+
+            chk.on("change", (e) => {
+                if ((e.currentTarget as HTMLInputElement).checked) {
+                    const message = new ChromeMessage(ChromeMessageKeys.WarnIfNotLoggedIn);
+                    chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, message);
+                }
             });
         }
 
-        private sendEmail(url: string, body: string, data: any, xhr: XMLHttpRequest): void {
+        private sendEmail(url, body, data, xhr: XMLHttpRequest): void {
             debugger;
+            const msg = new SforceGmailModel(this.currentUser, data);
+            if (msg.bcc_salesforce) {
+                const bccSforceMessage = new ChromeMessage(ChromeMessageKeys.BccSforce, msg);
+                chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, bccSforceMessage);
+            }
         }
     }
 }

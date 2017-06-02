@@ -4,14 +4,18 @@ Copyright AtlanticBT.
 
 import * as uuid from "uuid/v1";
 
-import { SforceValues } from "../tools/constants";
+import { ChromeStorageModel } from "../models/chrome.model";
+import { ChromeStorageKeys, SforceValues } from "../tools/constants";
 import { extNotInstalledNotificationId } from "./management.services";
 
 namespace AtlanticBTApp {
     chrome.notifications.onButtonClicked.addListener((nId, bIdx) => {
-        if (extNotInstalledNotificationId === nId) {
-            window.open(SforceValues.ExtensionUrl, "_blank");
-        }
+        chrome.storage.local.get(ChromeStorageKeys.ExtensionButtonLink, (item: ChromeStorageModel<string>) => {
+            debugger;
+            if (item.data === nId) {
+                window.open(SforceValues.ExtensionUrl, "_blank");
+            }
+        });
     });
 
     /**

@@ -5,15 +5,18 @@ Copyright AtlanticBT.
 import * as jsforce from "jsforce";
 import * as _ from "lodash";
 
-import { ISforceUserModel, SforceErrorModel, SforceUserModel } from "../models/sforce.model";
-import { ChromeCookieKeys, SforceErrorCodes, SforceValues } from "../tools/constants";
+import { ErrorModel } from "../models/error.model";
+import { SforceGmailModel } from "../models/gmail.model";
+import { ISforceContactModel, ISforceUserModel, SforceErrorModel, SforceUserModel } from "../models/sforce.model";
+import { ChromeCookieKeys, SforceValues } from "../tools/constants";
+import { getSessionCookies } from "./cookie.services";
 import { createNotification } from "./notification.services";
 
 namespace AtlanticBTApp {
     export let connection: any;
     export let currentUser: SforceUserModel;
 
-    export function initSforceConnection(cookie: chrome.cookies.Cookie): void {
+    export function setSforceConnection(cookie: chrome.cookies.Cookie): void {
         connection = new jsforce.Connection({
             oauth2: {
                 clientId: SforceValues.OAuthId,
@@ -24,80 +27,75 @@ namespace AtlanticBTApp {
         });
     }
 
-    export function isValidSforceSession(cookie: chrome.cookies.Cookie): Promise<boolean> {
-        const promise = new Promise<boolean>((resolve: (value: boolean) => {}, reject) => {
-            if (_.isEmpty(connection)) {
-                resolve(false);
-                return;
-            }
-
-            connection.identity((err, res: ISforceUserModel) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                currentUser = new SforceUserModel(res);
-                resolve(true);
+    export function processSessionCookie(): Promise<chrome.cookies.Cookie> {
+        const promise = new Promise((resolve: (cookie: chrome.cookies.Cookie) => {}, reject: (error: ErrorModel) => {}) => {
+            getSessionCookies().then((cookies) => {
+                let counter = 0;
+                _.forEach(cookies, (c) => {
+                    setSforceConnection(c);
+                    connection.identity((err: SforceErrorModel, res: ISforceUserModel) => {
+                        if (err) {
+                            counter++;
+                            if (counter === cookies.length) {
+                                currentUser = null;
+                                const error = new ErrorModel(err.errorCode, err.message);
+                                reject(error);
+                                return false;
+                            }
+                            return;
+                        }
+                        currentUser = new SforceUserModel(res);
+                        resolve(c);
+                        return false;
+                    });
+                });
+            }).catch((error: ErrorModel) => {
+                reject(error);
             });
         });
-
         return promise;
     }
 
-    export function loadSforceFromInit() {
-        const details: chrome.cookies.GetAllDetails = {};
-        chrome.cookies.getAll(details, (cookies) => {
-            _.forEach(cookies, (cookie) => {
-                if (cookie.name === ChromeCookieKeys.SforceSession && SforceValues.CookieDomainRegEx.test(cookie.domain)) {
-                    processCookie(cookie, "loadSforceFromInit");
-                    return;
-                }
-            });
-        });
-    }
+    export function bccSforce(message: SforceGmailModel) {
+        let contacts: ISforceContactModel[] = [];
 
-    export function loadSforceFromCookie(cookie: chrome.cookies.Cookie) {
-        processCookie(cookie, "loadSforceFromCookie");
-    }
+        _.forEach(message.to, (toEmail) => {
+            connection
+                .sobject("Contact")
+                .select("Id, AccountId")
+                .where({
+                    Email: toEmail
+                })
+                .execute((errC, resC: ISforceContactModel[]) => {
+                    if (errC) {
+                        return console.error(`Error finding Contact: ${toEmail}`);
+                    }
+                    _.forEach(resC, (contact) => {
+                        contacts.push(contact);
+                    });
 
-    function processCookie(cookie: chrome.cookies.Cookie, caller: string) {
-        let notification;
+                    // Remove possible duplicates on contacts
+                    contacts = _.uniqBy(contacts, "Id");
 
-        initSforceConnection(cookie);
-        isValidSforceSession(cookie).then((valid) => {
-            if (valid) {
-                notification = {
-                    type: "basic",
-                    title: "LOGIN",
-                    message: `${currentUser.availableName}, you're logged in Salesforce!`
-                };
-            } else {
-                notification = {
-                    type: "basic",
-                    title: "WARNING",
-                    message: "Salesforce session expired or is invalid. Please login to Salesforce."
-                };
-            }
-            createNotification(notification);
-        }).catch((error: SforceErrorModel) => {
-            switch (error.errorCode) {
-                case SforceErrorCodes.InvalidSession:
-                    notification = {
-                        type: "basic",
-                        title: "WARNING",
-                        message: "Salesforce session expired or is invalid. Please login to Salesforce."
-                    };
-                    break;
-                default:
-                    notification = {
-                        type: "basic",
-                        title: "ERROR",
-                        message: error.message
-                    };
-                    break;
-            }
-            createNotification(notification);
-            currentUser = null;
+                    _.forEach(contacts, (c) => {
+                        const task = {
+                            OwnerId: currentUser.user_id,
+                            Subject: message.subject,
+                            Description: message.body,
+                            TaskSubtype: "Email",
+                            WhoId: c.Id,
+                            WhatId: c.AccountId
+                        };
+                        connection
+                            .sobject("Task")
+                            .create(task, (errT, resT) => {
+                                if (errT || !resT.success) {
+                                    return console.error(errT, resT);
+                                }
+                                console.log("Task created");
+                            });
+                    });
+                });
         });
     }
 }

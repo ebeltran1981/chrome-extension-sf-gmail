@@ -5,6 +5,7 @@ Copyright AtlanticBT.
 namespace AtlanticBTApp {
     export class ChromeStorageKeys {
         public static readonly SforceSession: string = "sforce_session";
+        public static readonly ExtensionButtonLink: string = "extension_button_link";
     }
 
     export class ChromeConnectKeys {
@@ -12,9 +13,9 @@ namespace AtlanticBTApp {
     }
 
     export class ChromeMessageKeys {
-        public static readonly CreateNotification = "create_notification";
         public static readonly LoadSforceFromInit = "load_sforce_init";
-        public static readonly LoadSforceFromCookie = "load_sforce_cookie";
+        public static readonly WarnIfNotLoggedIn = "warn_sforce_not_loggedin";
+        public static readonly BccSforce = "bcc_sforce";
     }
 
     export class ChromeCookieKeys {
@@ -35,8 +36,9 @@ namespace AtlanticBTApp {
         public static readonly GmailUrlRegEx: RegExp = /^(https):\/\/(inbox|mail)\.google\.com$/;
     }
 
-    export class SforceErrorCodes {
-        public static readonly InvalidSession: string = "INVALID_SESSION_ID";
+    export class ChromeErrorCodes {
+        public static readonly SforceInvalidSession: string = "INVALID_SESSION_ID";
+        public static readonly CookieGet: string = "cookie_getter_error";
     }
 
     export class SforceValues {
