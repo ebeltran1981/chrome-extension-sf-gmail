@@ -28,11 +28,13 @@ namespace AtlanticBTApp {
         const promise = new Promise<boolean>((resolve: (value: boolean) => {}, reject) => {
             if (_.isEmpty(connection)) {
                 resolve(false);
+                return;
             }
 
             connection.identity((err, res: ISforceUserModel) => {
                 if (err) {
                     reject(err);
+                    return;
                 }
                 currentUser = new SforceUserModel(res);
                 resolve(true);
@@ -43,23 +45,22 @@ namespace AtlanticBTApp {
     }
 
     export function loadSforceFromInit() {
-        const details: chrome.cookies.GetAllDetails = {
-            name: ChromeCookieKeys.SforceSession
-        };
+        const details: chrome.cookies.GetAllDetails = {};
         chrome.cookies.getAll(details, (cookies) => {
             _.forEach(cookies, (cookie) => {
-                if (SforceValues.CookieDomainRegEx.test(cookie.domain)) {
-                    processCookie(cookie);
+                if (cookie.name === ChromeCookieKeys.SforceSession && SforceValues.CookieDomainRegEx.test(cookie.domain)) {
+                    processCookie(cookie, "loadSforceFromInit");
+                    return;
                 }
             });
         });
     }
 
     export function loadSforceFromCookie(cookie: chrome.cookies.Cookie) {
-        processCookie(cookie);
+        processCookie(cookie, "loadSforceFromCookie");
     }
 
-    function processCookie(cookie: chrome.cookies.Cookie) {
+    function processCookie(cookie: chrome.cookies.Cookie, caller: string) {
         let notification;
 
         initSforceConnection(cookie);

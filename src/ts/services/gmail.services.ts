@@ -15,7 +15,7 @@ namespace AtlanticBTApp {
         }
 
         public initialize() {
-            const initMessage = new ChromeMessage<{}>(ChromeMessageKeys.LoadSforceFromInit);
+            const initMessage = new ChromeMessage<{}>(ChromeMessageKeys.LoadSforceFromInit, "WEBPAGE");
             chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, initMessage);
 
             // const initPort = chrome.runtime.connect(ChromeExtensionValues.ExtensionId, { name: ChromeConnectKeys.LoginPort });
