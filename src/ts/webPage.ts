@@ -4,10 +4,10 @@ Copyright AtlanticBT.
 
 import "gmail-js";
 import * as $ from "jquery";
+
 import "./listeners/webPage.listeners";
-import { ChromeMessage } from "./models/chrome.model";
+
 import { GmailServices } from "./services/gmail.services";
-import { ChromeExtensionValues, ChromeMessageKeys } from "./tools/constants";
 
 namespace AtlanticBTApp {
     function isPluginLoaded(fn) {
@@ -18,11 +18,6 @@ namespace AtlanticBTApp {
         }
     }
 
-    function loadSforce() {
-        const message = new ChromeMessage(ChromeMessageKeys.LoadSforce);
-        chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, message);
-    }
-
     function loadGmail() {
         const gmail = new Gmail($);
         const gmailServices = new GmailServices(gmail);
@@ -30,7 +25,6 @@ namespace AtlanticBTApp {
     }
 
     isPluginLoaded(loadGmail);
-    loadSforce();
 }
 
 export = AtlanticBTApp;

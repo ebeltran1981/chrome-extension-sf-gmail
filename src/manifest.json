@@ -31,9 +31,6 @@
         "js/webPage.js"
     ],
     "externally_connectable": {
-        "ids": [
-            "gbajakhniioiefjggbcojmibedeaelbh"
-        ],
         "matches": [
             "https://mail.google.com/*",
             "https://inbox.google.com/*"
@@ -51,7 +48,6 @@
         "cookies",
         "notifications",
         "management",
-        "tabs",
         "https://mail.google.com/",
         "https://inbox.google.com/",
         "https://*.salesforce.com/",

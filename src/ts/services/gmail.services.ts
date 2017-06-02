@@ -2,6 +2,8 @@
 Copyright AtlanticBT.
 */
 
+import { ChromeMessage } from "../models/chrome.model";
+import { ChromeConnectKeys, ChromeExtensionValues, ChromeMessageKeys } from "../tools/constants";
 import { ComposeElements } from "../tools/elements";
 
 namespace AtlanticBTApp {
@@ -13,6 +15,15 @@ namespace AtlanticBTApp {
         }
 
         public initialize() {
+            const initMessage = new ChromeMessage<{}>(ChromeMessageKeys.LoadSforceFromInit);
+            chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, initMessage);
+
+            // const initPort = chrome.runtime.connect(ChromeExtensionValues.ExtensionId, { name: ChromeConnectKeys.LoginPort });
+            // initPort.postMessage(initMessage);
+            // initPort.onMessage.addListener((message, port) => {
+            //     console.log("MESSAGE FROM WEBPAGE: ", message, "PORT", port);
+            // });
+
             this.gmail.observe.on("compose", this.composeEmail.bind(this));
             this.gmail.observe.after("send_message", this.sendEmail.bind(this));
         }
