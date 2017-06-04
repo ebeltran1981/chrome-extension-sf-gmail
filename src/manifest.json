@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "AtlanticBT Gmail and Salesforce Extension",
-    "version": "0.0.4",
+    "version": "0.0.5",
 
     "description": "Extension for AtlanticBT. This extension implements missing features needed by ABT from the 'Lightning for Gmail' plugin from Salesforce.",
 
@@ -27,12 +27,20 @@
         "fonts/fontawesome-webfont.svg",
         "fonts/fontawesome-webfont.ttf",
         "fonts/fontawesome-webfont.woff",
-        "fonts/fontawesome-webfont.woff2"
+        "fonts/fontawesome-webfont.woff2",
+        "js/webPage.js"
     ],
+    "externally_connectable": {
+        "matches": [
+            "https://mail.google.com/*",
+            "https://inbox.google.com/*"
+        ]
+    },
+
     "author": "Edwin Beltran",
     "background": {
         "scripts": [
-            "js/background.js"
+            "js/backgroundEvents.js"
         ],
         "persistent": false
     },
@@ -41,8 +49,6 @@
         "notifications",
         "management",
         "storage",
-        "tabs",
-        "activeTab",
         "https://mail.google.com/",
         "https://inbox.google.com/",
         "https://*.salesforce.com/",
@@ -54,10 +60,10 @@
             "https://inbox.google.com/*"
         ],
         "css": [
-            "css/main.css"
+            "css/contentScripts.css"
         ],
         "js": [
-            "js/main.js"
+            "js/contentScripts.js"
         ]
     }]
 }
