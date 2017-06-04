@@ -4,7 +4,7 @@ Copyright AtlanticBT.
 
 namespace AtlanticBTApp {
     chrome.storage.onChanged.addListener((changes, areaName) => {
-        debugger;
+        // we can perform global actions when something change on the storage
     });
 }
 

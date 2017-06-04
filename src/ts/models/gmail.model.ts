@@ -4,6 +4,8 @@ Copyright AtlanticBT.
 
 import * as $ from "jquery";
 import * as _ from "lodash";
+
+import { GmailValues } from "../tools/constants";
 import { EmailTemplates } from "../tools/templates";
 
 namespace AtlanticBTApp {
@@ -25,7 +27,11 @@ namespace AtlanticBTApp {
             this.to = [];
             _.forEach($toList, (to: string) => {
                 if (!_.isEmpty(to)) {
-                    this.to.push(to);
+                    const match = GmailValues.GetEmailRegEx.exec(to);
+                    if (_.isEmpty(match)) {
+                        return;
+                    }
+                    this.to.push(match[0]);
                 }
             });
 
@@ -34,7 +40,11 @@ namespace AtlanticBTApp {
             this.cc = [];
             _.forEach($ccList, (cc: string) => {
                 if (!_.isEmpty(cc)) {
-                    this.cc.push(cc);
+                    const match = GmailValues.GetEmailRegEx.exec(cc);
+                    if (_.isEmpty(match)) {
+                        return;
+                    }
+                    this.cc.push(match[0]);
                 }
             });
 
@@ -43,7 +53,11 @@ namespace AtlanticBTApp {
             this.bcc = [];
             _.forEach($bccList, (bcc: string) => {
                 if (!_.isEmpty(bcc)) {
-                    this.bcc.push(bcc);
+                    const match = GmailValues.GetEmailRegEx.exec(bcc);
+                    if (_.isEmpty(match)) {
+                        return;
+                    }
+                    this.bcc.push(match[0]);
                 }
             });
 

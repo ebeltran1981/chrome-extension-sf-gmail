@@ -29,6 +29,12 @@ namespace AtlanticBTApp {
             // register gmail events
             this.gmail.observe.on("compose", this.composeEmail.bind(this));
             this.gmail.observe.after("send_message", this.sendEmail.bind(this));
+
+            // In case the browser was reloaded
+            const composes = this.gmail.dom.composes();
+            _.forEach(composes, (compose) => {
+                this.composeEmail(compose, compose.is_inline() ? "reply" : "compose");
+            });
         }
 
         private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
@@ -57,7 +63,6 @@ namespace AtlanticBTApp {
         }
 
         private sendEmail(url, body, data, xhr: XMLHttpRequest): void {
-            debugger;
             const msg = new SforceGmailModel(this.currentUser, data);
             if (msg.bcc_salesforce) {
                 const bccSforceMessage = new ChromeMessage(ChromeMessageKeys.BccSforce, msg);

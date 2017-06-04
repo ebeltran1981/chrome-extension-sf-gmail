@@ -3,12 +3,11 @@ Copyright AtlanticBT.
 */
 
 import * as _ from "lodash";
-import { ChromeStorageModel } from "../models/chrome.model";
+
 import { ChromeStorageKeys, SforceValues } from "../tools/constants";
 import { createNotification } from "./notification.services";
 
 namespace AtlanticBTApp {
-    export let extNotInstalledNotificationId: string = null;
     chrome.management.getAll((result) => {
         let found = false;
         _.forEach(result, (extension) => {
@@ -45,8 +44,7 @@ namespace AtlanticBTApp {
             ]
         };
         const nId = createNotification(notification);
-        const extButtonStorage = new ChromeStorageModel(ChromeStorageKeys.ExtensionButtonLink, nId);
-        chrome.storage.local.set(extButtonStorage);
+        chrome.storage.local.set({extensionButtonLink: nId});
     }
 }
 

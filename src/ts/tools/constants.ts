@@ -34,11 +34,13 @@ namespace AtlanticBTApp {
 
     export class GmailValues {
         public static readonly GmailUrlRegEx: RegExp = /^(https):\/\/(inbox|mail)\.google\.com$/;
+        public static readonly GetEmailRegEx: RegExp = /[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+/;
     }
 
     export class ChromeErrorCodes {
         public static readonly SforceInvalidSession: string = "INVALID_SESSION_ID";
         public static readonly CookieGet: string = "cookie_getter_error";
+        public static readonly CookieNotFound: string = "cookie_notfound_error";
     }
 
     export class SforceValues {

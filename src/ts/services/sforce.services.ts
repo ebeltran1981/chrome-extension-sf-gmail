@@ -8,7 +8,7 @@ import * as _ from "lodash";
 import { ErrorModel } from "../models/error.model";
 import { SforceGmailModel } from "../models/gmail.model";
 import { ISforceContactModel, ISforceUserModel, SforceErrorModel, SforceUserModel } from "../models/sforce.model";
-import { ChromeCookieKeys, SforceValues } from "../tools/constants";
+import { ChromeCookieKeys, ChromeErrorCodes, SforceValues } from "../tools/constants";
 import { getSessionCookies } from "./cookie.services";
 import { createNotification } from "./notification.services";
 
@@ -30,6 +30,12 @@ namespace AtlanticBTApp {
     export function processSessionCookie(): Promise<chrome.cookies.Cookie> {
         const promise = new Promise((resolve: (cookie: chrome.cookies.Cookie) => {}, reject: (error: ErrorModel) => {}) => {
             getSessionCookies().then((cookies) => {
+                if (_.isEmpty(cookies)) {
+                    currentUser = null;
+                    const error = new ErrorModel(ChromeErrorCodes.CookieNotFound, "No session cookies found.");
+                    reject(error);
+                    return;
+                }
                 let counter = 0;
                 _.forEach(cookies, (c) => {
                     setSforceConnection(c);
@@ -68,7 +74,7 @@ namespace AtlanticBTApp {
                 })
                 .execute((errC, resC: ISforceContactModel[]) => {
                     if (errC) {
-                        return console.error(`Error finding Contact: ${toEmail}`);
+                        return console.error("Error finding Contact: ", toEmail);
                     }
                     _.forEach(resC, (contact) => {
                         contacts.push(contact);

@@ -24,6 +24,7 @@ namespace AtlanticBTApp {
                     })
                     .catch((error: ErrorModel) => {
                         switch (error.code) {
+                            case ChromeErrorCodes.CookieNotFound:
                             case ChromeErrorCodes.SforceInvalidSession:
                                 const notification = {
                                     type: "basic",
@@ -38,6 +39,7 @@ namespace AtlanticBTApp {
                 processSessionCookie()
                     .catch((error: ErrorModel) => {
                         switch (error.code) {
+                            case ChromeErrorCodes.CookieNotFound:
                             case ChromeErrorCodes.SforceInvalidSession:
                                 const notification = {
                                     type: "basic",
@@ -49,7 +51,6 @@ namespace AtlanticBTApp {
                     });
                 break;
             case ChromeMessageKeys.BccSforce:
-                debugger;
                 const bccMessage = message.data as SforceGmailModel;
                 bccSforce(bccMessage);
                 break;
