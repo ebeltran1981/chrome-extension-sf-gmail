@@ -7,8 +7,7 @@ import * as _ from "lodash";
 
 import { ChromeMessage } from "../models/chrome.model";
 import { SforceGmailModel } from "../models/gmail.model";
-import { ISforceContactModel } from "../models/sforce.model";
-import { ChromeConnectKeys, ChromeExtensionValues, ChromeMessageKeys } from "../tools/constants";
+import { ChromeMessageKeys, ChromeMessageType } from "../tools/constants";
 import { ComposeElements } from "../tools/elements";
 
 namespace AtlanticBTApp {
@@ -23,8 +22,8 @@ namespace AtlanticBTApp {
 
         public initialize() {
             // try to initialize sforce connection
-            const initMessage = new ChromeMessage(ChromeMessageKeys.LoadSforceFromInit);
-            chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, initMessage);
+            const initMessage = new ChromeMessage(ChromeMessageKeys.LoadSforceFromInit, null, ChromeMessageType.WindowMessage);
+            window.postMessage(initMessage, "*");
 
             // register gmail events
             this.gmail.observe.on("compose", this.composeEmail.bind(this));
@@ -56,8 +55,8 @@ namespace AtlanticBTApp {
 
             chk.on("change", (e) => {
                 if ((e.currentTarget as HTMLInputElement).checked) {
-                    const message = new ChromeMessage(ChromeMessageKeys.WarnIfNotLoggedIn);
-                    chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, message);
+                    const message = new ChromeMessage(ChromeMessageKeys.WarnIfNotLoggedIn, null, ChromeMessageType.WindowMessage);
+                    window.postMessage(message, "*");
                 }
             });
         }
@@ -65,8 +64,8 @@ namespace AtlanticBTApp {
         private sendEmail(url, body, data, xhr: XMLHttpRequest): void {
             const msg = new SforceGmailModel(this.currentUser, data);
             if (msg.bcc_salesforce) {
-                const bccSforceMessage = new ChromeMessage(ChromeMessageKeys.BccSforce, msg);
-                chrome.runtime.sendMessage(ChromeExtensionValues.ExtensionId, bccSforceMessage);
+                const bccSforceMessage = new ChromeMessage(ChromeMessageKeys.BccSforce, msg, ChromeMessageType.WindowMessage);
+                window.postMessage(bccSforceMessage, "*");
             }
         }
     }

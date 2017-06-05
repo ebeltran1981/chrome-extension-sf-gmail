@@ -11,10 +11,10 @@ import { GmailServices } from "./services/gmail.services";
 
 namespace AtlanticBTApp {
     function isPluginLoaded(fn) {
-        if (document.readyState !== "complete" || (typeof Gmail === "undefined")) {
-            setTimeout(isPluginLoaded.bind(this, fn), 1000);
-        } else {
+        if (document.readyState === "complete" && typeof Gmail !== "undefined" && chrome.runtime !== undefined) {
             fn();
+        } else {
+            setTimeout(isPluginLoaded.bind(this, fn), 5100);
         }
     }
 

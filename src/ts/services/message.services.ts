@@ -10,7 +10,15 @@ import { createNotification } from "./notification.services";
 import { bccSforce, currentUser, processSessionCookie } from "./sforce.services";
 
 namespace AtlanticBTApp {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        messageProcessing(message, sender, sendResponse);
+    });
+
     chrome.runtime.onMessageExternal.addListener((message: ChromeMessage<{}>, sender, sendResponse) => {
+        messageProcessing(message, sender, sendResponse);
+    });
+
+    function messageProcessing(message: ChromeMessage<{}>, sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) {
         switch (message.key) {
             case ChromeMessageKeys.LoadSforceFromInit:
                 processSessionCookie()
@@ -55,7 +63,7 @@ namespace AtlanticBTApp {
                 bccSforce(bccMessage);
                 break;
         }
-    });
+    }
 }
 
 export = AtlanticBTApp;

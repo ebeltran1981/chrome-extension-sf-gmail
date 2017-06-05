@@ -18,6 +18,11 @@ namespace AtlanticBTApp {
         public static readonly BccSforce = "bcc_sforce";
     }
 
+    export enum ChromeMessageType {
+        NativeMessage = 1000,
+        WindowMessage = 1001
+    }
+
     export class ChromeCookieKeys {
         public static readonly SforceSession: string = "sid";
     }
