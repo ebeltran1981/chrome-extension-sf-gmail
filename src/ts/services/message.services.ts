@@ -62,6 +62,9 @@ namespace AtlanticBTApp {
                 const bccMessage = message.data as SforceGmailModel;
                 bccSforce(bccMessage);
                 break;
+            case ChromeMessageKeys.GetExtensionId:
+                sendResponse(chrome.runtime.id);
+                break;
         }
     }
 }

@@ -15,12 +15,14 @@ namespace AtlanticBTApp {
     export class ChromeMessageKeys {
         public static readonly LoadSforceFromInit = "load_sforce_init";
         public static readonly WarnIfNotLoggedIn = "warn_sforce_not_loggedin";
+        public static readonly GetExtensionId = "get_extension_id";
         public static readonly BccSforce = "bcc_sforce";
     }
 
     export enum ChromeMessageType {
-        NativeMessage = 1000,
-        WindowMessage = 1001
+        BackgroundMessage = 1000,
+        ContentScriptMessage = 1001,
+        WebPageMessage = 1002
     }
 
     export class ChromeCookieKeys {
@@ -31,10 +33,6 @@ namespace AtlanticBTApp {
         public static readonly Overwrite = "overwrite";
         public static readonly Explicit = "explicit";
         public static readonly ExpiredOverwrite = "expired_overwrite";
-    }
-
-    export class ChromeExtensionValues {
-        public static readonly ExtensionId: string = "gbajakhniioiefjggbcojmibedeaelbh";
     }
 
     export class GmailValues {
