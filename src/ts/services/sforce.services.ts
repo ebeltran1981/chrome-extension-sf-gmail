@@ -63,46 +63,47 @@ namespace AtlanticBTApp {
     }
 
     export function bccSforce(message: SforceGmailModel) {
-        let contacts: ISforceContactModel[] = [];
+        connection
+            .sobject("Contact")
+            .select("Id, AccountId")
+            .where({
+                Email: message.to
+            })
+            .execute((errC, resC: ISforceContactModel[]) => {
+                if (errC) {
+                    return console.error("Error finding Contacts", errC);
+                }
 
-        _.forEach(message.to, (toEmail) => {
-            connection
-                .sobject("Contact")
-                .select("Id, AccountId")
-                .where({
-                    Email: toEmail
-                })
-                .execute((errC, resC: ISforceContactModel[]) => {
-                    if (errC) {
-                        return console.error("Error finding Contact: ", toEmail);
-                    }
-                    _.forEach(resC, (contact) => {
-                        contacts.push(contact);
-                    });
-
-                    // Remove possible duplicates on contacts
-                    contacts = _.uniqBy(contacts, "Id");
-
-                    _.forEach(contacts, (c) => {
-                        const task = {
-                            OwnerId: currentUser.user_id,
-                            Subject: message.subject,
-                            Description: message.body,
-                            TaskSubtype: "Email",
-                            WhoId: c.Id,
-                            WhatId: c.AccountId
-                        };
-                        connection
-                            .sobject("Task")
-                            .create(task, (errT, resT) => {
-                                if (errT || !resT.success) {
-                                    return console.error(errT, resT);
-                                }
-                                console.log("Task created");
-                            });
-                    });
+                let aIds = _.map(resC, (c) => {
+                    return c.AccountId;
                 });
-        });
+
+                aIds = _.uniq(aIds);
+
+                _.forEach(aIds, (aId) => {
+                    const cIds = _.map(resC, (c) => {
+                        if (c.AccountId === aId) {
+                            return c.Id;
+                        }
+                    });
+                    const task = {
+                        OwnerId: currentUser.user_id,
+                        Subject: message.subject,
+                        Description: message.body,
+                        TaskSubtype: "Email",
+                        TaskWhoIds: cIds,
+                        WhatId: aId
+                    };
+                    connection
+                        .sobject("Task")
+                        .create(task, (errT, resT) => {
+                            if (errT || !resT.success) {
+                                return console.error(errT, resT);
+                            }
+                            console.log("Task created for account: ", aId);
+                        });
+                });
+            });
     }
 }
 

@@ -18,7 +18,7 @@ namespace AtlanticBTApp {
         if (document.readyState === "complete" && typeof gmailjs !== "undefined" && chrome.runtime !== undefined) {
             fn(params);
         } else {
-            setTimeout(isPluginLoaded.bind(this, fn, params), 100);
+            setTimeout(isPluginLoaded.bind(this, fn, params), 1000);
         }
     }
 
