@@ -18,7 +18,7 @@ namespace AtlanticBTApp {
         if (document.readyState === "complete" && typeof gmailjs !== "undefined" && chrome.runtime !== undefined) {
             fn(params);
         } else {
-            setTimeout(isPluginLoaded.bind(this, fn, params), 1000);
+            setTimeout(isPluginLoaded.bind(this, fn, params), 10);
         }
     }
 
@@ -45,9 +45,10 @@ namespace AtlanticBTApp {
         }
     }, false);
 
-    const eIdMessage = new ChromeMessage(ChromeMessageKeys.GetExtensionId, null, ChromeMessageType.ContentScriptMessage);
-    window.postMessage(eIdMessage, "*");
-
+    setTimeout(() => {
+        const eIdMessage = new ChromeMessage(ChromeMessageKeys.GetExtensionId, null, ChromeMessageType.ContentScriptMessage);
+        window.postMessage(eIdMessage, "*");
+    }, 5000);
 }
 
 export = AtlanticBTApp;

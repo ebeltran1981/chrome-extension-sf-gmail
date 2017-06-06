@@ -81,9 +81,10 @@ namespace AtlanticBTApp {
                 aIds = _.uniq(aIds);
 
                 _.forEach(aIds, (aId) => {
-                    const cIds = _.map(resC, (c) => {
+                    const cIds: string[] = [];
+                    _.forEach(resC, (c) => {
                         if (c.AccountId === aId) {
-                            return c.Id;
+                            cIds.push(c.Id);
                         }
                     });
                     const task = {
@@ -100,7 +101,7 @@ namespace AtlanticBTApp {
                             if (errT || !resT.success) {
                                 return console.error(errT, resT);
                             }
-                            console.log("Task created for account: ", aId);
+                            console.log("Task created");
                         });
                 });
             });
