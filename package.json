@@ -1,6 +1,6 @@
 {
   "name": "gmail-salesforce-extension",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "description": "Google Chrome extension for a custom integration of missing functionality from Lightning for Gmail.",
   "scripts": {
     "start": "concurrently \"tsc\" \"webpack-dev-server -w\""

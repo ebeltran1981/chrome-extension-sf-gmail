@@ -6,7 +6,7 @@ import { ChromeMessage } from "../models/chrome.model";
 import { ErrorModel } from "../models/error.model";
 import { SforceGmailModel } from "../models/gmail.model";
 import { ChromeErrorCodes, ChromeMessageKeys } from "../tools/constants";
-import { createNotification } from "./notification.services";
+import { clearNotification, createNotification } from "./notification.services";
 import { bccSforce, currentUser, processSessionCookie } from "./sforce.services";
 
 namespace AtlanticBTApp {
@@ -28,7 +28,8 @@ namespace AtlanticBTApp {
                             title: "LOGIN",
                             message: `${currentUser.availableName}, you're logged in Salesforce!`
                         };
-                        createNotification(notification);
+                        const nId = createNotification(notification);
+                        clearNotification(nId);
                     })
                     .catch((error: ErrorModel) => {
                         switch (error.code) {
@@ -39,7 +40,8 @@ namespace AtlanticBTApp {
                                     title: "WARNING",
                                     message: "Salesforce session expired or is invalid. Please login to Salesforce."
                                 };
-                                createNotification(notification);
+                                const nId = createNotification(notification);
+                                clearNotification(nId);
                         }
                     });
                 break;
@@ -54,7 +56,8 @@ namespace AtlanticBTApp {
                                     title: "WARNING",
                                     message: "You are not logged in Salesforce."
                                 };
-                                createNotification(notification);
+                                const nId = createNotification(notification);
+                                clearNotification(nId);
                         }
                     });
                 break;

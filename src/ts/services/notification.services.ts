@@ -29,6 +29,16 @@ namespace AtlanticBTApp {
         });
         return id;
     }
+
+    export function clearNotification(nId: string, now: boolean = false, delayed: number = 5000) {
+        if (now) {
+            chrome.notifications.clear(nId);
+        } else {
+            setTimeout(() => {
+                chrome.notifications.clear(nId);
+            }, delayed);
+        }
+    }
 }
 
 export = AtlanticBTApp;

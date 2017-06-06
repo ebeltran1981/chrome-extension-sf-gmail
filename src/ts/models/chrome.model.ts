@@ -9,7 +9,6 @@ namespace AtlanticBTApp {
         public key: string;
         public data: T;
         public type: ChromeMessageType;
-        public activator: string;
 
         constructor(key: string, data?: T, type?: ChromeMessageType) {
             this.key = key;

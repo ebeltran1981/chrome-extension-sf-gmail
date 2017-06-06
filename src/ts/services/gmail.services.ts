@@ -2,6 +2,9 @@
 Copyright AtlanticBT.
 */
 
+// tslint:disable-next-line:no-reference
+/// <reference path="../../../node_modules/gmail-js/src/gmail.d.ts" />
+
 import * as $ from "jquery";
 import * as _ from "lodash";
 
@@ -16,30 +19,28 @@ namespace AtlanticBTApp {
         private currentUser: string;
         private composeEl: ComposeElements;
 
-        constructor(private extensionId, private gmail: Gmail) {
-            this.currentUser = gmail.get.user_email();
+        constructor(private extensionId, private gmailjs: Gmail) {
+            this.currentUser = gmailjs.get.user_email();
             this.composeEl = new ComposeElements();
         }
 
         public initialize() {
-            debugger;
             // try to initialize sforce connection
             const initMessage = new ChromeMessage(ChromeMessageKeys.LoadSforceFromInit);
             chrome.runtime.sendMessage(this.extensionId, initMessage);
 
             // register gmail events
-            this.gmail.observe.on("compose", this.composeEmail.bind(this));
-            this.gmail.observe.after("send_message", this.sendEmail.bind(this));
+            this.gmailjs.observe.on("compose", this.composeEmail.bind(this));
+            this.gmailjs.observe.after("send_message", this.sendEmail.bind(this));
 
             // In case the browser was reloaded
-            const composes = this.gmail.dom.composes();
+            const composes = this.gmailjs.dom.composes();
             _.forEach(composes, (compose) => {
                 this.composeEmail(compose, compose.is_inline() ? "reply" : "compose");
             });
         }
 
         private composeEmail(compose: GmailDomCompose, type: GmailComposeType): void {
-            const gmail = this.gmail;
             const composeEl = this.composeEl;
 
             const form = compose.$el.find("form");

@@ -13,7 +13,10 @@ namespace AtlanticBTApp {
 
         const webPageMessage = event.data as ChromeMessage<any>;
         if (webPageMessage.type && (webPageMessage.type === ChromeMessageType.BackgroundMessage)) {
-            //
+            switch (webPageMessage.key) {
+                default:
+                    break;
+            }
         }
     }, false);
 }

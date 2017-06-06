@@ -2,7 +2,9 @@
 Copyright AtlanticBT.
  */
 
-import "gmail-js";
+// tslint:disable-next-line:no-var-requires
+const gmailjs = require("gmail-js");
+
 import * as $ from "jquery";
 
 import "./listeners/webPage.listeners";
@@ -12,19 +14,20 @@ import { GmailServices } from "./services/gmail.services";
 import { ChromeMessageKeys, ChromeMessageType } from "./tools/constants";
 
 namespace AtlanticBTApp {
-    let extensionId: string;
-    export function isPluginLoaded(fn) {
-        if (document.readyState === "complete" && typeof Gmail !== "undefined" && chrome.runtime !== undefined && extensionId !== undefined) {
-            fn(extensionId);
+    export function isPluginLoaded(fn, params) {
+        if (document.readyState === "complete" && typeof gmailjs !== "undefined" && chrome.runtime !== undefined) {
+            fn(params);
         } else {
-            setTimeout(isPluginLoaded.bind(this, fn), 100);
+            setTimeout(isPluginLoaded.bind(this, fn, params), 100);
         }
     }
 
     export function loadGmail(eId) {
-        const gmail = new Gmail($);
+        const gmail = new gmailjs.Gmail($);
         const gmailServices = new GmailServices(eId, gmail);
-        gmail.observe.on("load", gmailServices.initialize.bind(gmailServices));
+        gmail.observe.on("load", gmailServices.initialize.bind(gmailServices), (a, b, c, d) => {
+            debugger;
+        });
     }
 
     window.addEventListener("message", (event) => {
@@ -36,13 +39,15 @@ namespace AtlanticBTApp {
         if (webPageMessage.type && (webPageMessage.type === ChromeMessageType.WebPageMessage)) {
             switch (webPageMessage.key) {
                 case ChromeMessageKeys.GetExtensionId:
-                    extensionId = webPageMessage.data;
+                    isPluginLoaded(loadGmail, webPageMessage.data);
                     break;
             }
         }
     }, false);
 
-    isPluginLoaded(loadGmail);
+    const eIdMessage = new ChromeMessage(ChromeMessageKeys.GetExtensionId, null, ChromeMessageType.ContentScriptMessage);
+    window.postMessage(eIdMessage, "*");
+
 }
 
 export = AtlanticBTApp;
