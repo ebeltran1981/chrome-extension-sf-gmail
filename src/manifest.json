@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "AtlanticBT Gmail and Salesforce Extension",
     "short_name": "ABT Force",
-    "version": "0.0.10",
+    "version": "1.0.0",
 
     "description": "This extension implements missing features needed by ABT from the 'Lightning for Gmail' plugin from Salesforce.",
 

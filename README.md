@@ -15,12 +15,19 @@ This project is built using TypeScript and Webpack.
 
 ### **Running the project**
 - Must have NodeJS and NPM installed.
-- Must install **npm-run**: `npm install npm-run -g`
 - From the project directory run: `npm install`
-- Compile the project: `npm-run tsc`
-- Package the files: `npm-run webpack -w`
+- Then run: `npm start` to trigger webpack in watch mode
 
 ### **Notes**
 The webpack configuration file, package all the files to the `dist` folder. This is the folder to be use at Chrome Extensions to manually load the extension for development.
 
-The project has two entry points. `Index.ts` and `Background.ts`. The first is the Content Script, the second is for communication as a background page.
+The project has three main files: `webPage.ts`, `contentScripts.ts` and `backgroundEvents.ts`. 
+
+#### **webPage.ts**
+This is the file that gets injected inside the Gmail page. It acts as a regular script file, and do not have direct access to the entire Chrome API.
+
+#### **contentScripts.ts**
+This is responsible for injecting the `webPage.ts` file into Gmail, and handle some of the communication between `webPage.ts` and `backgroundEvents.ts`; like getting the extension Id for subsequential communication between the two.
+
+#### **backgroundEvents.ts**
+This is the backbone of this extension. Is where all the domain logic resides. Notifications, Storage, Cookies, Salesforce, etc.

@@ -18,10 +18,6 @@ namespace AtlanticBTApp {
 
     export function setSforceConnection(cookie: chrome.cookies.Cookie): void {
         connection = new jsforce.Connection({
-            oauth2: {
-                clientId: SforceValues.OAuthId,
-                redirectUri: SforceValues.RedirectUrl
-            },
             instanceUrl: `https://${cookie.domain}`,
             accessToken: cookie.value
         });

@@ -6,6 +6,7 @@ import * as cleanWebpackPlugin from "clean-webpack-plugin";
 import * as extractTextPlugin from "extract-text-webpack-plugin";
 import * as path from "path";
 import * as webpack from "webpack"; // to access built-in plugins
+import * as uglifyJsPlugin from "webpack-uglify-harmony-package";
 
 const cleanOptions = {
     dry: false,
@@ -19,6 +20,8 @@ const extractSass = new extractTextPlugin({
     filename: "css/[name].css",
 });
 
+const uglifyJs = new uglifyJsPlugin();
+
 module.exports = {
     entry: {
         webPage: "./src/ts/webPage.ts",
@@ -31,16 +34,6 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                enforce: "pre",
-                test: /\.js$/,
-                loader: "source-map-loader",
-            },
-            {
-                enforce: "pre",
-                test: /\.tsx?$/,
-                use: "source-map-loader",
-            },
             {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 use: [
@@ -135,10 +128,10 @@ module.exports = {
     },
     plugins: [
         cleanWebpack,
-        extractSass
+        extractSass,
+        uglifyJs
     ],
     resolve: {
         extensions: [".ts", ".tsx", ".js"]
-    },
-    devtool: "inline-source-map"
+    }
 };

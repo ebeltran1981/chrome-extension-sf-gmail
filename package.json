@@ -1,13 +1,17 @@
 {
-  "name": "gmail-salesforce-extension",
-  "version": "0.0.8",
+  "name": "abt-gmail-and-salesforce-extension",
+  "private": true,
+  "version": "1.0.0",
   "description": "Google Chrome extension for a custom integration of missing functionality from Lightning for Gmail.",
   "scripts": {
-    "start": "concurrently \"tsc\" \"webpack-dev-server -w\""
+    "start": "concurrently \"tsc\" \"webpack --w\"",
+    "tsc": "tsc",
+    "webpack": "webpack"
   },
   "license": "MIT",
   "repository": {
-    "url": "https://www.atlanticbt.com"
+    "type": "git",
+    "url": "git@gitlab.atlanticbt.com:edwin.beltran/chrome-extension-sf-gmail.git"
   },
   "dependencies": {
     "font-awesome": "4.7.0",
@@ -42,6 +46,7 @@
     "typescript": "2.3.2",
     "url-loader": "^0.5.8",
     "webpack": "2.5.1",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-server": "^2.4.5",
+    "webpack-uglify-harmony-package": "1.0.1"
   }
 }
