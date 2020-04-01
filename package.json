@@ -31,7 +31,7 @@
     "clean-webpack-plugin": "0.1.16",
     "concurrently": "3.4.0",
     "css-loader": "0.28.1",
-    "eslint": "^3.19.0",
+    "eslint": "^6.8.0",
     "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.11.1",
     "font-awesome-sass-loader": "^2.0.1",
