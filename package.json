@@ -18,7 +18,7 @@
     "gmail-js": "0.6.10",
     "jquery": "^1.10.2",
     "jsforce": "1.8.0",
-    "lodash": "4.17.4",
+    "lodash": "4.17.15",
     "uuid": "3.0.1"
   },
   "devDependencies": {
